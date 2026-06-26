@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Use — Soundb</title>
+  <meta name="description" content="Soundb's Terms of Use — the rules governing your use of soundb.org.">
+<style>
+.legal-hero { padding: 56px 0 40px; border-bottom: 1px solid var(--border); }
+.legal-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.16em; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.legal-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--amber); }
+.legal-title { font-family: var(--font-display); font-size: 72px; font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -2px; color: var(--text); margin-bottom: 16px; }
+.legal-title em { color: var(--amber); font-style: normal; }
+.legal-meta { font-family: var(--font-mono); font-size: 11px; color: var(--muted); display: flex; gap: 24px; flex-wrap: wrap; }
+.legal-meta span { display: flex; align-items: center; gap: 6px; }
+.legal-meta span::before { content: '·'; color: var(--amber); }
+.legal-meta span:first-child::before { display: none; }
+.legal-layout { display: grid; grid-template-columns: 220px 1fr; gap: 64px; padding: 56px 0 80px; align-items: start; }
+.legal-toc { position: sticky; top: 82px; }
+.legal-toc-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.legal-toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.legal-toc-item a { font-family: var(--font-mono); font-size: 11px; color: var(--muted); padding: 6px 0 6px 12px; display: block; border-left: 2px solid var(--border); transition: all 0.2s; line-height: 1.4; }
+.legal-toc-item a:hover, .legal-toc-item.active a { color: var(--text); border-left-color: var(--amber); }
+.legal-body { min-width: 0; }
+.legal-section { margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+.legal-section:last-child { border-bottom: none; margin-bottom: 0; }
+.legal-section-num { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px; }
+.legal-section-title { font-family: var(--font-display); font-size: 28px; font-weight: 900; text-transform: uppercase; color: var(--text); margin-bottom: 20px; line-height: 1; }
+.legal-body p { font-size: 14px; color: var(--muted); line-height: 1.8; margin-bottom: 16px; }
+.legal-body p:last-child { margin-bottom: 0; }
+.legal-body ul { list-style: none; margin: 16px 0; display: flex; flex-direction: column; gap: 8px; }
+.legal-body ul li { font-size: 14px; color: var(--muted); line-height: 1.7; padding-left: 16px; position: relative; }
+.legal-body ul li::before { content: '—'; position: absolute; left: 0; color: var(--amber); font-family: var(--font-mono); font-size: 12px; }
+.legal-body h3 { font-family: var(--font-display); font-size: 16px; font-weight: 800; text-transform: uppercase; color: var(--text); margin: 24px 0 10px; letter-spacing: 0.04em; }
+.legal-highlight { background: var(--bg3); border: 1px solid var(--border2); border-left: 3px solid var(--amber); padding: 20px 24px; margin: 24px 0; }
+.legal-highlight p { margin-bottom: 0; color: var(--text); }
+.legal-contact-box { background: var(--bg2); border: 1px solid var(--border); padding: 28px; margin-top: 24px; }
+.legal-contact-box h3 { font-family: var(--font-display); font-size: 18px; font-weight: 900; text-transform: uppercase; color: var(--text); margin-bottom: 12px; }
+.legal-contact-box p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 6px; }
+.legal-contact-box a { color: var(--amber); }
+.legal-sibling-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 64px; }
+.legal-sibling { background: var(--bg2); padding: 24px; cursor: pointer; transition: background 0.2s; }
+.legal-sibling:hover { background: var(--card); }
+.legal-sibling-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.legal-sibling-title { font-family: var(--font-display); font-size: 20px; font-weight: 800; text-transform: uppercase; color: var(--text); }
+.legal-sibling-arrow { font-family: var(--font-mono); font-size: 12px; color: var(--amber); margin-top: 8px; }
+@media (max-width: 900px) { .legal-layout { grid-template-columns: 1fr; } .legal-toc { display: none; } .legal-title { font-size: 52px; } }
+@media (max-width: 480px) { .legal-title { font-size: 40px; } .legal-sibling-nav { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<section class="legal-hero">
+  <div class="container">
+    <div class="legal-eyebrow">Legal</div>
+    <h1 class="legal-title">Terms<br>of <em>Use</em></h1>
+    <div class="legal-meta">
+      <span>Soundb</span>
+      <span>Effective: 1 January 2025</span>
+      <span>Jurisdiction: India</span>
+      <span>Last updated: June 2025</span>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="legal-layout">
+
+    <aside class="legal-toc">
+      <div class="legal-toc-label">Contents</div>
+      <ul class="legal-toc-list">
+        <li class="legal-toc-item"><a href="#t1">1. Acceptance</a></li>
+        <li class="legal-toc-item"><a href="#t2">2. About Soundb</a></li>
+        <li class="legal-toc-item"><a href="#t3">3. Use of the site</a></li>
+        <li class="legal-toc-item"><a href="#t4">4. Intellectual property</a></li>
+        <li class="legal-toc-item"><a href="#t5">5. User content</a></li>
+        <li class="legal-toc-item"><a href="#t6">6. Third-party links</a></li>
+        <li class="legal-toc-item"><a href="#t7">7. Disclaimers</a></li>
+        <li class="legal-toc-item"><a href="#t8">8. Limitation of liability</a></li>
+        <li class="legal-toc-item"><a href="#t9">9. Indemnification</a></li>
+        <li class="legal-toc-item"><a href="#t10">10. Governing law</a></li>
+        <li class="legal-toc-item"><a href="#t11">11. Changes</a></li>
+        <li class="legal-toc-item"><a href="#t12">12. Contact</a></li>
+      </ul>
+    </aside>
+
+    <div class="legal-body">
+
+      <div class="legal-highlight">
+        <p>Please read these Terms of Use carefully before using soundb.org. By accessing or using our website, you agree to be bound by these terms. If you do not agree, please do not use the site. These terms are governed by the laws of India, including the Information Technology Act, 2000.</p>
+      </div>
+
+      <div class="legal-section" id="t1">
+        <div class="legal-section-num">Section 01</div>
+        <div class="legal-section-title">Acceptance of Terms</div>
+        <p>By accessing soundb.org, you confirm that you are at least 13 years of age, have read and understood these Terms of Use, and agree to be bound by them along with our Privacy Policy and Cookie Policy, which are incorporated herein by reference.</p>
+        <p>If you are using the site on behalf of an organisation, you represent that you have the authority to bind that organisation to these terms.</p>
+      </div>
+
+      <div class="legal-section" id="t2">
+        <div class="legal-section-num">Section 02</div>
+        <div class="legal-section-title">About Soundb</div>
+        <p>Soundb is an independent audio technology and music publication. We provide editorial content including news articles, gear reviews, product specifications, music coverage, and related information. Our content is created by our editorial team and is for informational and editorial purposes only.</p>
+        <p>Nothing on soundb.org constitutes professional advice of any kind. Gear recommendations, reviews, and scores reflect the editorial opinion of Soundb's writers and should not be the sole basis for purchasing decisions.</p>
+      </div>
+
+      <div class="legal-section" id="t3">
+        <div class="legal-section-num">Section 03</div>
+        <div class="legal-section-title">Use of the Site</div>
+        <h3>Permitted use</h3>
+        <p>You may access and use soundb.org for personal, non-commercial purposes. You may share links to our content and quote brief excerpts with proper attribution to Soundb and a link to the original article.</p>
+        <h3>Prohibited conduct</h3>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Copy, reproduce, republish, or distribute our content in full without prior written permission</li>
+          <li>Use the site for any unlawful purpose or in violation of applicable Indian law</li>
+          <li>Attempt to gain unauthorised access to any part of the site or its systems</li>
+          <li>Use automated tools (scrapers, bots, crawlers) to extract content without permission</li>
+          <li>Transmit any harmful, offensive, or malicious code or material</li>
+          <li>Impersonate Soundb, our editorial team, or any other person or entity</li>
+          <li>Engage in any conduct that could damage, disable, or impair the site</li>
+        </ul>
+        <p>We reserve the right to terminate or restrict access to the site for any user who violates these terms.</p>
+      </div>
+
+      <div class="legal-section" id="t4">
+        <div class="legal-section-num">Section 04</div>
+        <div class="legal-section-title">Intellectual Property</div>
+        <p>All content on soundb.org — including but not limited to articles, reviews, scores, photographs, graphics, illustrations, design, and code — is the property of Soundb or its content suppliers and is protected under Indian copyright law and applicable international treaties.</p>
+        <p>The Soundb name, logo, and all related marks are proprietary to Soundb. You may not use them without prior written consent.</p>
+        <h3>Fair use and quotation</h3>
+        <p>Brief quotations from our content for purposes of commentary, criticism, or news reporting are permitted under the doctrine of fair dealing under the Indian Copyright Act, 1957, provided that clear attribution to Soundb is given and a link to the original content is included.</p>
+        <p>Reproduction of full articles, reviews, or substantial portions of our content — in any medium — requires our prior written permission. To request syndication or reproduction rights, contact us at <a href="mailto:legal@soundb.org" style="color:var(--amber)">legal@soundb.org</a>.</p>
+      </div>
+
+      <div class="legal-section" id="t5">
+        <div class="legal-section-num">Section 05</div>
+        <div class="legal-section-title">User Content</div>
+        <p>If you submit any content to us — including feedback, comments, letters, or suggestions — you grant Soundb a non-exclusive, royalty-free, perpetual, irrevocable licence to use, reproduce, and publish that content in any medium.</p>
+        <p>You represent that any content you submit is your own, does not infringe any third-party rights, and does not violate any applicable law. We reserve the right to remove or not publish any content at our sole discretion.</p>
+      </div>
+
+      <div class="legal-section" id="t6">
+        <div class="legal-section-num">Section 06</div>
+        <div class="legal-section-title">Third-Party Links</div>
+        <p>Soundb contains links to third-party websites and services, including streaming platforms, product retailers, and social media. These links are provided for convenience and do not constitute an endorsement of those sites or their content.</p>
+        <p>We have no control over, and assume no responsibility for, the content, privacy policies, or practices of any third-party websites. We encourage you to review the terms and privacy policies of any third-party sites you visit.</p>
+      </div>
+
+      <div class="legal-section" id="t7">
+        <div class="legal-section-num">Section 07</div>
+        <div class="legal-section-title">Disclaimers</div>
+        <p>Soundb's content is provided on an "as is" and "as available" basis without warranties of any kind, either express or implied. While we make every effort to ensure the accuracy of our editorial content, we do not warrant that:</p>
+        <ul>
+          <li>All information on the site is accurate, complete, or current at all times</li>
+          <li>Product prices, specifications, or availability listed are guaranteed to be current</li>
+          <li>The site will be available without interruption or error</li>
+          <li>Any defects in the site will be corrected</li>
+        </ul>
+        <p>Gear reviews and scores reflect the subjective editorial opinion of our reviewers based on their testing at a specific point in time. Soundb is not responsible for purchasing decisions made based on our content.</p>
+      </div>
+
+      <div class="legal-section" id="t8">
+        <div class="legal-section-num">Section 08</div>
+        <div class="legal-section-title">Limitation of Liability</div>
+        <p>To the maximum extent permitted by applicable Indian law, Soundb and its editors, contributors, and affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of, or inability to use, soundb.org or its content.</p>
+        <p>This includes, but is not limited to, damages for loss of profits, data, goodwill, or other intangible losses, even if Soundb has been advised of the possibility of such damages.</p>
+        <p>Nothing in these terms limits liability for death or personal injury caused by negligence, or for any matter that cannot be excluded by law.</p>
+      </div>
+
+      <div class="legal-section" id="t9">
+        <div class="legal-section-num">Section 09</div>
+        <div class="legal-section-title">Indemnification</div>
+        <p>You agree to indemnify, defend, and hold harmless Soundb, its editors, contributors, and affiliates from and against any claims, liabilities, damages, losses, and expenses (including reasonable legal fees) arising out of or in connection with your use of soundb.org, your violation of these Terms, or your violation of any third-party rights.</p>
+      </div>
+
+      <div class="legal-section" id="t10">
+        <div class="legal-section-num">Section 10</div>
+        <div class="legal-section-title">Governing Law & Disputes</div>
+        <p>These Terms of Use are governed by and construed in accordance with the laws of India. Any disputes arising out of or in connection with these terms shall be subject to the exclusive jurisdiction of the courts of India.</p>
+        <p>We encourage you to contact us at <a href="mailto:legal@soundb.org" style="color:var(--amber)">legal@soundb.org</a> before initiating any formal dispute, as most concerns can be resolved quickly through direct communication.</p>
+      </div>
+
+      <div class="legal-section" id="t11">
+        <div class="legal-section-num">Section 11</div>
+        <div class="legal-section-title">Changes to These Terms</div>
+        <p>We may update these Terms of Use from time to time. When we make material changes, we will update the "Last updated" date at the top of this page and, where appropriate, notify newsletter subscribers. Your continued use of soundb.org after any changes constitutes your acceptance of the updated terms.</p>
+      </div>
+
+      <div class="legal-section" id="t12">
+        <div class="legal-section-num">Section 12</div>
+        <div class="legal-section-title">Contact</div>
+        <div class="legal-contact-box">
+          <h3>Legal — Soundb</h3>
+          <p><strong style="color:var(--text)">General enquiries:</strong> <a href="mailto:hello@soundb.org">hello@soundb.org</a></p>
+          <p><strong style="color:var(--text)">Legal & copyright:</strong> <a href="mailto:legal@soundb.org">legal@soundb.org</a></p>
+          <p><strong style="color:var(--text)">Privacy & data:</strong> <a href="mailto:privacy@soundb.org">privacy@soundb.org</a></p>
+        </div>
+      </div>
+
+      <div class="legal-sibling-nav">
+        <div class="legal-sibling" onclick="location.href='soundb-privacy.html'">
+          <div class="legal-sibling-label">Also read</div>
+          <div class="legal-sibling-title">Privacy Policy</div>
+          <div class="legal-sibling-arrow">Read →</div>
+        </div>
+        <div class="legal-sibling" onclick="location.href='soundb-cookies.html'">
+          <div class="legal-sibling-label">Also read</div>
+          <div class="legal-sibling-title">Cookie Policy</div>
+          <div class="legal-sibling-arrow">Read →</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+var sections = ['t1','t2','t3','t4','t5','t6','t7','t8','t9','t10','t11','t12'];
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    var link = document.querySelector('.legal-toc-item a[href="#' + e.target.id + '"]');
+    if (link) link.closest('.legal-toc-item').classList.toggle('active', e.isIntersecting);
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+sections.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    var link = document.querySelector('.legal-toc-item a[href="#' + id + '"]');
+    if (link) link.addEventListener('click', function(e) {
+      e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    observer.observe(el);
+  }
+});
+</script>
+</body>
+</html>

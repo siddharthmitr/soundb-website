@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "music_tracks",
+  "info": {
+    "singularName": "music-track",
+    "pluralName": "music-tracks",
+    "displayName": "Music-tracks"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}

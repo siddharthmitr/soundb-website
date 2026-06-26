@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reviews — Soundb</title>
+<style>
+/* ── PAGE HERO ── */
+.reviews-hero { padding: 48px 0 40px; border-bottom: 1px solid var(--border); }
+.reviews-hero-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.reviews-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.reviews-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--amber); }
+.reviews-title { font-family: var(--font-display); font-size: 80px; font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -2px; color: var(--text); }
+.reviews-title em { color: var(--amber); font-style: normal; }
+.reviews-desc { font-size: 14px; color: var(--muted); max-width: 360px; line-height: 1.7; margin-top: 14px; }
+.reviews-stats { display: flex; gap: 32px; flex-shrink: 0; }
+.reviews-stat-num { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--amber); line-height: 1; }
+.reviews-stat-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── FILTER BAR ── */
+.filter-bar { padding: 18px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; flex-shrink: 0; }
+.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+.chip { font-family: var(--font-mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); padding: 7px 14px; cursor: pointer; transition: all 0.2s; background: none; white-space: nowrap; }
+.chip:hover { color: var(--text); border-color: var(--border2); }
+.chip.active { color: #000; background: var(--amber); border-color: var(--amber); }
+.filter-right { display: flex; gap: 8px; align-items: center; margin-left: auto; flex-shrink: 0; }
+.sort-select { background: var(--bg3); border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 11px; padding: 7px 28px 7px 12px; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A8880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+
+/* ── LAYOUT ── */
+.reviews-layout { display: grid; grid-template-columns: 1fr 300px; gap: 48px; padding: 40px 0 80px; }
+
+/* ── TOP PICK (hero review card) ── */
+.top-pick { display: grid; grid-template-columns: 380px 1fr; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: background 0.2s; margin-bottom: 1px; }
+.top-pick:hover { background: var(--card); }
+.top-pick-img { height: 100%; min-height: 260px; overflow: hidden; position: relative; }
+.top-pick-img svg { display: block; width: 100%; height: 100%; }
+.top-pick-badge { position: absolute; top: 14px; left: 14px; font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; background: var(--amber); color: #000; }
+.top-pick-body { padding: 32px; border-left: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; }
+.top-pick-cat { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 12px; }
+.top-pick-name { font-family: var(--font-display); font-size: 38px; font-weight: 900; text-transform: uppercase; line-height: 0.95; letter-spacing: -0.5px; color: var(--text); margin-bottom: 6px; }
+.top-pick-brand { font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-bottom: 16px; }
+.top-pick-verdict { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; flex: 1; }
+.top-pick-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid var(--border); }
+.top-pick-score { display: flex; align-items: baseline; gap: 3px; }
+.top-pick-score-num { font-family: var(--font-display); font-size: 44px; font-weight: 900; color: var(--amber); line-height: 1; }
+.top-pick-score-den { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.top-pick-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-align: right; line-height: 1.8; }
+.top-pick-cta { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--amber); letter-spacing: 0.06em; margin-top: 12px; }
+
+/* ── REVIEW GRID ── */
+.review-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-top: none; }
+.review-card-item { background: var(--bg); cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; }
+.review-card-item:hover { background: var(--card); }
+.review-card-img { width: 100%; height: 150px; overflow: hidden; flex-shrink: 0; position: relative; }
+.review-card-img svg { display: block; width: 100%; height: 100%; }
+.review-card-badge { position: absolute; top: 10px; left: 10px; font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; }
+.review-card-body { padding: 18px; flex: 1; display: flex; flex-direction: column; }
+.review-card-cat { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.review-card-name { font-family: var(--font-display); font-size: 19px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; margin-bottom: 3px; }
+.review-card-brand { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.review-card-verdict { font-size: 12px; color: var(--muted); line-height: 1.55; flex: 1; margin-bottom: 14px; }
+.review-card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--border); margin-top: auto; }
+.review-card-score { font-family: var(--font-display); font-size: 26px; font-weight: 900; color: var(--amber); }
+.review-card-score span { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.review-card-price { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* ── BUYING GUIDE CARD (full-width) ── */
+.buying-guide-card { background: var(--bg); border: 1px solid var(--border); border-top: none; display: grid; grid-template-columns: 1fr 1fr 1fr; cursor: default; }
+.buying-guide-inner { padding: 28px 32px; border-right: 1px solid var(--border); display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; transition: background 0.2s; }
+.buying-guide-inner:last-child { border-right: none; }
+.buying-guide-inner:hover { background: var(--card); }
+.buying-guide-label { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 12px; }
+.buying-guide-title { font-family: var(--font-display); font-size: 22px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; margin-bottom: 8px; }
+.buying-guide-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.buying-guide-link { font-family: var(--font-display); font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--amber); letter-spacing: 0.06em; margin-top: 14px; }
+
+/* ── RESULTS BAR ── */
+.results-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 0; margin-bottom: -1px; }
+.results-count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.results-count strong { color: var(--amber); }
+
+/* ── NO RESULTS ── */
+.no-results { padding: 80px 24px; text-align: center; border: 1px solid var(--border); }
+.no-results h3 { font-family: var(--font-display); font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+.no-results p { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* ── LOAD MORE ── */
+.load-more-wrap { padding: 32px 0 0; display: flex; justify-content: center; }
+.load-more-btn { background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-display); font-size: 14px; font-weight: 700; text-transform: uppercase; padding: 12px 36px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em; }
+.load-more-btn:hover { color: var(--text); border-color: var(--amber); }
+
+/* ── SIDEBAR ── */
+.reviews-sidebar { display: flex; flex-direction: column; gap: 28px; }
+.sidebar-sticky { position: sticky; top: 82px; display: flex; flex-direction: column; gap: 28px; }
+.sidebar-widget { background: var(--bg2); border: 1px solid var(--border); }
+.sidebar-widget-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+.sidebar-widget-body { padding: 18px; }
+.top-rated-item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.2s; align-items: center; }
+.top-rated-item:last-child { border-bottom: none; }
+.top-rated-item:hover { opacity: 0.75; }
+.top-rated-score { font-family: var(--font-display); font-size: 24px; font-weight: 900; color: var(--amber); min-width: 44px; }
+.top-rated-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text); line-height: 1.2; margin-bottom: 2px; }
+.top-rated-cat { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.cat-list { display: flex; flex-direction: column; gap: 0; }
+.cat-list-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+.cat-list-item:last-child { border-bottom: none; }
+.cat-list-item:hover .cat-list-name { color: var(--amber); }
+.cat-list-name { font-family: var(--font-mono); font-size: 12px; color: var(--muted); transition: color 0.2s; }
+.cat-list-count { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--border2); }
+.newsletter-widget { background: var(--card); border: 1px solid var(--border2); padding: 22px; }
+.newsletter-widget h3 { font-family: var(--font-display); font-size: 20px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+.newsletter-widget h3 span { color: var(--amber); }
+.newsletter-widget p { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.newsletter-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); color: var(--text); font-family: var(--font-body); font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 8px; box-sizing: border-box; }
+.newsletter-input:focus { border-color: var(--amber); }
+.newsletter-btn { width: 100%; background: var(--amber); color: #000; font-family: var(--font-display); font-size: 14px; font-weight: 900; text-transform: uppercase; padding: 11px; border: none; cursor: pointer; transition: background 0.2s; }
+.newsletter-btn:hover { background: var(--amber2); }
+.newsletter-toast { display: none; font-family: var(--font-mono); font-size: 11px; color: var(--green); margin-top: 8px; text-align: center; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) { .reviews-layout { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .top-pick { grid-template-columns: 1fr; }
+  .top-pick-img { min-height: 200px; }
+  .top-pick-body { border-left: none; border-top: 1px solid var(--border); }
+  .review-grid { grid-template-columns: 1fr 1fr; }
+  .buying-guide-card { grid-template-columns: 1fr; }
+  .buying-guide-inner { border-right: none; border-bottom: 1px solid var(--border); }
+  .buying-guide-inner:last-child { border-bottom: none; }
+}
+@media (max-width: 768px) {
+  .reviews-title { font-size: 52px; }
+  .review-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+}
+@media (max-width: 480px) { .reviews-title { font-size: 38px; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- PAGE HERO -->
+  <section class="reviews-hero">
+    <div class="reviews-hero-inner">
+      <div>
+        <div class="reviews-eyebrow" id="page-eyebrow">All Reviews</div>
+        <div class="reviews-title">Sound<em>b</em><br>Reviews</div>
+        <div class="reviews-desc" id="page-desc">Independent, long-term reviews of headphones, interfaces, microphones, synths, speakers, and more.</div>
+      </div>
+      <div class="reviews-stats">
+        <div>
+          <div class="reviews-stat-num" id="stat-count">—</div>
+          <div class="reviews-stat-label">Reviews published</div>
+        </div>
+        <div>
+          <div class="reviews-stat-num">6</div>
+          <div class="reviews-stat-label">Gear categories</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Category</span>
+    <div class="filter-chips">
+      <button class="chip active" data-cat="all">All</button>
+      <button class="chip" data-cat="headphones">Headphones &amp; IEMs</button>
+      <button class="chip" data-cat="interfaces">Interfaces &amp; DACs</button>
+      <button class="chip" data-cat="microphones">Microphones</button>
+      <button class="chip" data-cat="speakers">Speakers &amp; Monitors</button>
+      <button class="chip" data-cat="synths">Synths &amp; Samplers</button>
+      <button class="chip" data-cat="preamps">Preamps</button>
+      <button class="chip" data-cat="guides">Buying Guides</button>
+    </div>
+    <div class="filter-right">
+      <select class="sort-select" id="sort-select">
+        <option value="latest">Latest first</option>
+        <option value="score">Highest rated</option>
+        <option value="price-hi">Price: high to low</option>
+        <option value="price-lo">Price: low to high</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="reviews-layout">
+    <div>
+      <div class="results-bar">
+        <div class="results-count" id="results-count"><strong>—</strong> reviews</div>
+      </div>
+      <div id="top-pick-slot"></div>
+      <div id="reviews-slot"></div>
+      <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+        <button class="load-more-btn" id="load-more-btn">Load more reviews</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="reviews-sidebar">
+      <div class="sidebar-sticky">
+
+        <!-- Top Rated — populated from CMS -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-header">Top rated</div>
+          <div class="sidebar-widget-body" id="sidebar-top-rated">
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:8px 0">Loading…</div>
+          </div>
+        </div>
+
+        <!-- Categories — populated from CMS -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-header">Browse by category</div>
+          <div class="sidebar-widget-body" style="padding:0">
+            <div class="cat-list" id="sidebar-cat-list">
+              <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 18px">Loading…</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="newsletter-widget">
+          <h3>New <span>Reviews</span><br>Weekly</h3>
+          <p>Get every new review in your inbox the moment it's published.</p>
+          <input class="newsletter-input" type="email" placeholder="Your email address" id="nl-email">
+          <button class="newsletter-btn" id="nl-btn">Subscribe</button>
+          <div class="newsletter-toast" id="nl-toast">✓ You're subscribed!</div>
+        </div>
+
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<script>
+/* ── REVIEWS DATABASE ── */
+var REVIEWS = []; // populated from CMS
+
+
+function getTarget(r) {
+  if (r.reviewed && r.id) return 'soundb-review.html?id=' + r.id;
+  return 'soundb-specs.html?id=' + r.id;
+}
+
+function goToReview(r) {
+  // Store id in localStorage as fallback — npx serve strips query strings
+  localStorage.setItem('soundb_review_id', String(r.id));
+  localStorage.setItem('soundb_spec_id', String(r.id));
+  location.href = getTarget(r);
+}
+
+const CAT_META = {
+  all:        { label:'All Reviews',         desc:'Independent, long-term reviews of headphones, interfaces, microphones, synths, speakers, and more.' },
+  headphones: { label:'Headphones & IEMs',   desc:'Over-ear, on-ear, in-ear — every form of personal listening, tested to exhaustion.' },
+  interfaces: { label:'Interfaces & DACs',   desc:'Recording, playback, and conversion — the gear that sits between your instruments and your speakers.' },
+  microphones:{ label:'Microphones',         desc:'Dynamic, condenser, ribbon — capture tools tested in real recording environments.' },
+  speakers:   { label:'Speakers & Monitors', desc:'Studio monitors and hi-fi speakers — the final word in how music is heard.' },
+  synths:     { label:'Synths & Samplers',   desc:'Hardware instruments — analogue, digital, and everything in between.' },
+  preamps:    { label:'Preamps',              desc:'Mic preamps, channel strips, and transformer-based gain stages — the soul of the signal chain.' },
+  guides:     { label:'Buying Guides',       desc:'Category-wide comparisons that tell you exactly what to buy at every budget.' },
+};
+
+let currentCat = 'all';
+let currentSort = 'latest';
+const PAGE_SIZE = 9;
+let visibleCount = PAGE_SIZE;
+
+function readParams() {
+  const p = new URLSearchParams(location.search);
+  var cat = p.get('cat');
+  // Fallback: nav dropdown stores cat in localStorage before navigating
+  if (!cat) {
+    cat = localStorage.getItem('soundb_reviews_cat') || 'all';
+  }
+  localStorage.removeItem('soundb_reviews_cat');
+  if (CAT_META[cat]) currentCat = cat;
+}
+
+function getFiltered() {
+  var items = currentCat === 'all'
+    ? REVIEWS.slice()
+    : REVIEWS.filter(function(r) {
+        // normalize both sides to lowercase for safe comparison
+        return (r.cat || '').toLowerCase() === currentCat.toLowerCase();
+      });
+  console.log('[Reviews] getFiltered cat:', currentCat, '| matched:', items.length, '| cats in data:', [...new Set(REVIEWS.map(r=>r.cat))]);
+  if (currentSort === 'score') items.sort(function(a,b){ return (b.score||0)-(a.score||0); });
+  else if (currentSort === 'price-hi') items.sort(function(a,b){ return (b.price||0)-(a.price||0); });
+  else if (currentSort === 'price-lo') items.sort(function(a,b){ return (a.price||999999)-(b.price||999999); });
+  else items.sort(function(a,b){ return b.id-a.id; });
+  return items;
+}
+
+function formatPrice(p) {
+  if (!p) return null;
+  return '\u20b9' + p.toLocaleString('en-IN');
+}
+
+function svgThumb(color, h=150) {
+  const uid = Math.random().toString(36).slice(2,7);
+  return `<svg width="100%" height="${h}" viewBox="0 0 300 ${h}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="300" height="${h}" fill="${color}"/>
+    <defs><radialGradient id="rg${uid}" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#FF8C00" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="300" height="${h}" fill="url(#rg${uid})"/>
+    <circle cx="220" cy="${h*0.5}" r="${h*0.38}" fill="none" stroke="#FF8C00" stroke-width="0.6" opacity="0.25"/>
+    <circle cx="220" cy="${h*0.5}" r="${h*0.2}" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.2"/>
+    <circle cx="220" cy="${h*0.5}" r="${h*0.08}" fill="#FF8C00" opacity="0.25"/>
+    <g opacity="0.55">
+      <rect x="28" y="${h*0.3}" width="4" height="${h*0.4}" rx="2" fill="#FF8C00"/>
+      <rect x="38" y="${h*0.2}" width="4" height="${h*0.6}" rx="2" fill="#FF8C00"/>
+      <rect x="48" y="${h*0.26}" width="4" height="${h*0.48}" rx="2" fill="#FF8C00"/>
+      <rect x="58" y="${h*0.15}" width="4" height="${h*0.7}" rx="2" fill="#FF8C00"/>
+      <rect x="68" y="${h*0.24}" width="4" height="${h*0.52}" rx="2" fill="#FF8C00"/>
+    </g>
+  </svg>`;
+}
+
+function renderTopPick(review) {
+  if (!review) { document.getElementById('top-pick-slot').innerHTML = ''; return; }
+  const priceStr = formatPrice(review.price);
+  const target = getTarget(review);
+  var topTarget = getTarget(review);
+  document.getElementById('top-pick-slot').innerHTML = `
+    <div class="top-pick" onclick="localStorage.setItem('soundb_review_id','${review.id}');localStorage.setItem('soundb_spec_id','${review.id}');location.href='${topTarget}'">
+      <div class="top-pick-img" style="position:relative">
+        ${svgThumb(review.color, 280)}
+        <div class="top-pick-badge">Editor's Pick</div>
+      </div>
+      <div class="top-pick-body">
+        <div>
+          <div class="top-pick-cat">${review.label}</div>
+          <div class="top-pick-name">${review.name}</div>
+          <div class="top-pick-brand">${review.brand}</div>
+          <div class="top-pick-verdict">${review.verdict}</div>
+        </div>
+        <div>
+          <div class="top-pick-footer">
+            <div class="top-pick-score">
+              <span class="top-pick-score-num">${review.score}</span>
+              <span class="top-pick-score-den">/10</span>
+            </div>
+            <div class="top-pick-meta">
+              ${priceStr ? `<span>${priceStr}</span><br>` : ""}
+              <span>${review.author}</span><br>
+              <span>${review.date}</span>
+            </div>
+          </div>
+          <div class="top-pick-cta">Read full review →</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGrid(reviews) {
+  const slot = document.getElementById('reviews-slot');
+  if (!reviews.length) {
+    slot.innerHTML = `<div class="no-results"><h3>No reviews found</h3><p>Try a different category or check back soon.</p></div>`;
+    document.getElementById('load-more-wrap').style.display = 'none';
+    return;
+  }
+
+  if (currentCat === 'guides') {
+    slot.innerHTML = `<div class="buying-guide-card">
+      ${reviews.map(r => `
+        <div class="buying-guide-inner" onclick="location.href='${r.guideUrl || 'soundb-reviews.html'}'">
+          <div>
+            <div class="buying-guide-label">${r.label}</div>
+            <div class="buying-guide-title">${r.name}</div>
+            <div class="buying-guide-desc">${r.verdict}</div>
+          </div>
+          <div class="buying-guide-link">Read guide →</div>
+        </div>`).join('')}
+    </div>`;
+    document.getElementById('load-more-wrap').style.display = 'none';
+    return;
+  }
+
+  const badgeHTML = b => b ? `<div class="review-card-badge badge-${b}">${b==="editors"?"Editor's Choice":b==="new"?"New":"Budget Pick"}</div>` : "";
+  slot.innerHTML = `<div class="review-grid">
+    ${reviews.map(r => {
+      const target = getTarget(r);
+      const priceStr = formatPrice(r.price);
+      return `<div class="review-card-item" onclick="localStorage.setItem('soundb_review_id','${r.id}');localStorage.setItem('soundb_spec_id','${r.id}');location.href='${target}'">
+        <div class="review-card-img" style="position:relative">
+          ${svgThumb(r.color, 150)}
+          ${badgeHTML(r.badge)}
+        </div>
+        <div class="review-card-body">
+          <div class="review-card-cat">${r.label}</div>
+          <div class="review-card-name">${r.name}</div>
+          <div class="review-card-brand">${r.brand}</div>
+          <div class="review-card-verdict">${r.verdict}</div>
+          <div class="review-card-footer">
+            <div class="review-card-score">${r.score}<span>/10</span></div>
+            ${priceStr ? `<div class="review-card-price">${priceStr}</div>` : ""}
+          </div>
+        </div>
+      </div>`;
+    }).join("")}
+  </div>`;
+}
+
+function syncChips() {
+  document.querySelectorAll('.chip[data-cat]').forEach(c =>
+    c.classList.toggle('active', c.dataset.cat === currentCat));
+}
+
+function render() {
+  const meta = CAT_META[currentCat];
+  document.title = meta.label + ' — Soundb';
+  document.getElementById('page-eyebrow').textContent = meta.label;
+  document.getElementById('page-desc').textContent = meta.desc;
+
+  const all = getFiltered();
+  const showTopPick = currentCat !== 'guides' && all.length > 0;
+  const topReview = showTopPick
+    ? (all.find(r => r.badge === 'editors') || [...all].sort((a,b) => (b.score||0) - (a.score||0))[0])
+    : null;
+
+  const restAll = (showTopPick && topReview) ? all.filter(r => r.id !== topReview.id) : all;
+  const rest = currentCat === 'guides' ? all : restAll.slice(0, visibleCount);
+  const restTotal = restAll.length;
+
+  document.getElementById('stat-count').textContent = all.length;
+  document.getElementById('results-count').innerHTML =
+    `<strong>${all.length}</strong> ${all.length === 1 ? 'review' : 'reviews'}${currentCat !== 'all' ? ' in ' + meta.label : ''}`;
+
+  renderTopPick(topReview);
+  renderGrid(rest);
+
+  const lmw = document.getElementById('load-more-wrap');
+  lmw.style.display = (currentCat !== 'guides' && visibleCount < restTotal) ? 'flex' : 'none';
+
+  syncChips();
+  history.replaceState({}, '', currentCat === 'all' ? 'soundb-reviews.html' : 'soundb-reviews.html?cat=' + currentCat);
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  visibleCount = PAGE_SIZE;
+  console.log('[Reviews] filterCat:', cat, '| REVIEWS.length:', REVIEWS.length);
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.chip[data-cat]').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    filterCat(this.dataset.cat);
+  });
+});
+
+document.getElementById('sort-select').addEventListener('change', function() {
+  currentSort = this.value;
+  visibleCount = PAGE_SIZE;
+  render();
+});
+
+document.getElementById('load-more-btn').addEventListener('click', () => {
+  visibleCount += PAGE_SIZE;
+  render();
+});
+
+document.getElementById('nl-btn').addEventListener('click', () => {
+  const email = document.getElementById('nl-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('nl-email').style.borderColor = 'var(--red)';
+    return;
+  }
+  document.getElementById('nl-email').style.borderColor = '';
+  document.getElementById('nl-btn').style.display = 'none';
+  document.getElementById('nl-toast').style.display = 'block';
+  setTimeout(() => {
+    document.getElementById('nl-btn').style.display = 'block';
+    document.getElementById('nl-toast').style.display = 'none';
+    document.getElementById('nl-email').value = '';
+  }, 3000);
+});
+
+/* ── SIDEBAR: Top Rated ── */
+function renderTopRated(reviews) {
+  var el = document.getElementById('sidebar-top-rated');
+  if (!el) return;
+  // exclude guides, sort by score desc, take top 5
+  var top = reviews
+    .filter(function(r) { return r.cat !== 'guides' && r.score; })
+    .sort(function(a,b) { return (b.score||0) - (a.score||0); })
+    .slice(0, 5);
+  if (!top.length) { el.innerHTML = '<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:8px 0">No reviews yet.</div>'; return; }
+  el.innerHTML = top.map(function(r) {
+    var target = getTarget(r);
+    return '<div class="top-rated-item" onclick="localStorage.setItem(\'soundb_review_id\',\'' + r.id + '\');localStorage.setItem(\'soundb_spec_id\',\'' + r.id + '\');location.href=\'' + target + '\'" style="cursor:pointer">'
+      + '<div class="top-rated-score">' + r.score + '</div>'
+      + '<div><div class="top-rated-name">' + r.name + '</div>'
+      + '<div class="top-rated-cat">' + (r.label || r.subcat || r.cat) + '</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+/* ── SIDEBAR: Category counts ── */
+function renderCategoryCounts(reviews) {
+  var el = document.getElementById('sidebar-cat-list');
+  if (!el) return;
+  // count per category (exclude guides from counts)
+  var counts = {};
+  reviews.forEach(function(r) {
+    if (r.cat && r.cat !== 'guides') counts[r.cat] = (counts[r.cat] || 0) + 1;
+  });
+  // only show categories that exist in CAT_META and have at least 1 review
+  var cats = ['headphones','interfaces','microphones','speakers','synths','preamps'];
+  var html = cats.map(function(cat) {
+    var count = counts[cat] || 0;
+    var label = CAT_META[cat] ? CAT_META[cat].label : cat;
+    return '<div class="cat-list-item" style="padding:10px 18px" onclick="filterCat(\'' + cat + '\')">'
+      + '<span class="cat-list-name">' + label + '</span>'
+      + '<span class="cat-list-count">' + count + '</span>'
+      + '</div>';
+  }).join('');
+  el.innerHTML = html || '<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:12px 18px">No reviews yet.</div>';
+}
+
+// Reviews listing pulls from GearProduct — reviewed:true products only
+CMS.getGear([]).then(function(data) {
+  console.log('[Reviews] GearProducts from CMS:', data.length, 'total');
+  console.log('[Reviews] Reviewed products:', data.filter(function(g){ return g.reviewed; }).length);
+
+  REVIEWS = data
+    .filter(function(g) {
+      // Strapi booleans can come back as true/false/null — be explicit
+      return g.reviewed === true || g.reviewed === 'true' || g.reviewed === 1;
+    })
+    .map(function(g) {
+      return {
+        id:      g.id,
+        cat:     g.cat ? g.cat.toLowerCase() : 'gear',
+        label:   g.subcat || g.cat || '',
+        name:    g.name,
+        brand:   g.brand,
+        score:   g.score,
+        price:   g.price,
+        badge:   g.badge,
+        date:    g.date || '',
+        author:  g.author || 'Soundb Editors',
+        read:    g.readTime || '',
+        verdict: g.verdict || g.desc || '',
+        color:   g.color1 || '#1a1a1a',
+        reviewed: true,
+      };
+    });
+
+  console.log('[Reviews] Mapped reviews:', REVIEWS.length);
+  renderTopRated(REVIEWS);
+  renderCategoryCounts(REVIEWS);
+  readParams();
+  render();
+});
+</script>
+</body>
+</html>

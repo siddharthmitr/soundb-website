@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music — Soundb</title>
+<style>
+/* ══ MUSIC PAGE ═════════════════════════════════════════════════ */
+
+/* ── HERO: split layout, artwork panel right ── */
+.mhero {
+  position: relative; min-height: 520px;
+  display: grid; grid-template-columns: 1fr 480px;
+  grid-template-rows: 1fr;
+  border-bottom: 1px solid var(--border); overflow: hidden;
+  width: 100%;
+}
+.mhero-left {
+  padding: 64px 56px 56px; display: flex;
+  flex-direction: column; justify-content: space-between;
+  position: relative; z-index: 1;
+  background: var(--bg);
+  grid-column: 1; grid-row: 1;
+  min-width: 0;
+}
+.mhero-left::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 0% 100%, rgba(255,140,0,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.mhero-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; color: var(--amber);
+  text-transform: uppercase; letter-spacing: 0.18em;
+  display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+}
+.mhero-eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--amber); }
+.mhero-title {
+  font-family: var(--font-display); font-size: 96px; font-weight: 900;
+  text-transform: uppercase; line-height: 0.88; letter-spacing: -3px; color: var(--text);
+}
+.mhero-title em { color: var(--amber); font-style: normal; }
+.mhero-sub {
+  font-size: 15px; color: var(--muted); max-width: 480px; line-height: 1.75;
+  margin-top: 24px; margin-bottom: 32px;
+}
+.mhero-cta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn-mhero-primary {
+  background: var(--amber); color: #000;
+  font-family: var(--font-display); font-size: 14px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 12px 28px; border: none; cursor: pointer; transition: all 0.2s;
+}
+.btn-mhero-primary:hover { background: var(--amber2); transform: translateY(-1px); }
+.btn-mhero-ghost {
+  background: none; border: 1px solid var(--border2); color: var(--muted);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+  padding: 12px 20px; cursor: pointer; transition: all 0.2s;
+}
+.btn-mhero-ghost:hover { color: var(--text); border-color: var(--text); }
+.mhero-stats {
+  display: flex; gap: 36px; padding-top: 24px;
+  border-top: 1px solid var(--border); flex-wrap: wrap;
+}
+.mhero-stat-n { font-family: var(--font-display); font-size: 30px; font-weight: 900; color: var(--amber); line-height: 1; }
+.mhero-stat-l { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+.loc-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+  font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+  border: 1px solid var(--border); padding: 5px 12px; align-self: flex-start;
+}
+.loc-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: pulse 2s ease-in-out infinite; }
+
+/* Hero right — stacked album art collage */
+.mhero-right {
+  border-left: 1px solid var(--border);
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  min-height: 0; overflow: hidden;
+  grid-column: 2; grid-row: 1;
+}
+.mhero-art { overflow: hidden; cursor: pointer; position: relative; }
+.mhero-art svg { display: block; width: 100%; height: 100%; transition: transform 0.4s; }
+.mhero-art:hover svg { transform: scale(1.04); }
+.mhero-art-label {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(10,10,11,0.92) 0%, transparent 100%);
+  padding: 20px 14px 10px;
+}
+.mhero-art-title { font-family: var(--font-display); font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.1; }
+.mhero-art-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+.mhero-art-score { position: absolute; top: 10px; right: 10px; font-family: var(--font-display); font-size: 18px; font-weight: 900; color: var(--amber); }
+.mhero-waveform { position: absolute; bottom: 0; left: 0; right: 0; height: 48px; opacity: 0.12; pointer-events: none; }
+
+/* ── SHARED SECTION UTILS ── */
+.msec { padding: 52px 0; border-bottom: 1px solid var(--border); }
+.msec:last-of-type { border-bottom: none; }
+.msec-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 28px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.msec-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; }
+.msec-title::before { content: ''; width: 16px; height: 2px; background: var(--amber); }
+.msec-link { font-family: var(--font-mono); font-size: 11px; color: var(--amber); letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.2s; }
+.msec-link:hover { opacity: 0.7; }
+
+/* ── BROWSE BY REGION ── */
+.browse-3col {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+  overflow: hidden; width: 100%;
+}
+.bcol { background: var(--bg2); display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+.bcol.pinned { background: var(--bg3); }
+.bcol-head {
+  padding: 20px 22px 16px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.bcol-title { font-family: var(--font-display); font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--text); line-height: 1; }
+.bcol-sub { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+.bcol-badge { font-family: var(--font-mono); font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; background: var(--amber); color: #000; flex-shrink: 0; }
+.bcol-hot { background: var(--green); color: #000; }
+.bcol-body { padding: 0 22px 22px; flex: 1; }
+.bcol-sublabel { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; padding: 14px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+
+/* ── ALBUM MINI GRID ── */
+.album-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; width: 100%; box-sizing: border-box; }
+.album-mini { cursor: pointer; }
+.album-mini:hover .am-art svg { transform: scale(1.04); }
+.am-art { position: relative; width: 100%; padding-top: 100%; overflow: hidden; border: 1px solid var(--border); }
+.am-art svg, .am-art img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+.am-score { position: absolute; bottom: 5px; right: 6px; font-family: var(--font-display); font-size: 14px; font-weight: 900; color: var(--amber); text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
+.am-title { font-family: var(--font-display); font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.1; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.am-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+
+/* ── TRACK ROW — with streaming links ── */
+.trow {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.trow:last-child { border-bottom: none; }
+.trow:hover .trow-streams { opacity: 1; }
+.trow:hover .trow-plays { opacity: 0; }
+.trow-rank { font-family: var(--font-mono); font-size: 11px; color: var(--muted); min-width: 18px; text-align: center; flex-shrink: 0; }
+.trow-art { width: 36px; height: 36px; flex-shrink: 0; overflow: hidden; border: 1px solid var(--border); }
+.trow-art svg { display: block; width: 100%; height: 100%; }
+.trow-info { flex: 1; min-width: 0; }
+.trow-name { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text); line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.trow-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
+.trow-right { position: relative; width: 80px; flex-shrink: 0; text-align: right; }
+.trow-plays { font-family: var(--font-mono); font-size: 10px; color: var(--muted); transition: opacity 0.2s; }
+.trow-new { font-family: var(--font-mono); font-size: 8px; font-weight: 700; letter-spacing: 0.1em; background: var(--blue); color: #000; padding: 2px 5px; vertical-align: middle; }
+.trow-streams {
+  position: absolute; top: 50%; right: 0; transform: translateY(-50%);
+  display: flex; gap: 5px; align-items: center; opacity: 0; transition: opacity 0.2s;
+}
+.stream-btn {
+  width: 22px; height: 22px; border-radius: 4px; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.06); transition: background 0.15s, opacity 0.15s;
+  text-decoration: none; flex-shrink: 0; opacity: 0.7;
+}
+.stream-btn:hover { background: rgba(255,255,255,0.14); opacity: 1; }
+.stream-btn svg { display: block; width: 12px; height: 12px; fill: var(--text); }
+
+/* ── BCOL FOOTER ── */
+.bcol-foot { padding: 14px 22px; border-top: 1px solid var(--border); }
+.btn-bcol-all { width: 100%; background: none; border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; padding: 8px; cursor: pointer; transition: all 0.2s; }
+.btn-bcol-all:hover { color: var(--amber); border-color: var(--amber); }
+
+/* ── CHART TABLE (full-width, editorial) ── */
+.chart-table-wrap { border: 1px solid var(--border); }
+.chart-table-head { display: grid; grid-template-columns: 40px 56px 1fr 100px; gap: 0; padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--bg3); }
+.chart-table-head span { font-family: var(--font-mono); font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; }
+.chart-row { display: grid; grid-template-columns: 40px 56px 1fr 100px; gap: 0; align-items: center; padding: 0 16px; border-bottom: 1px solid var(--border); background: var(--bg); transition: background 0.15s; cursor: pointer; }
+.chart-row:last-child { border-bottom: none; }
+.chart-row:hover { background: var(--card); }
+.chart-row:hover .cr-streams { opacity: 1; }
+.chart-row:hover .cr-plays { opacity: 0; }
+.cr-num { font-family: var(--font-display); font-size: 18px; font-weight: 900; color: var(--border2); padding: 14px 0; }
+.cr-art { width: 44px; height: 44px; margin: 8px 12px 8px 0; overflow: hidden; flex-shrink: 0; border: 1px solid var(--border); }
+.cr-art svg { display: block; width: 100%; height: 100%; }
+.cr-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; text-transform: uppercase; color: var(--text); }
+.cr-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+.cr-album { font-family: var(--font-mono); font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cr-genre { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.cr-right { position: relative; text-align: right; padding: 12px 0; }
+.cr-plays { font-family: var(--font-mono); font-size: 11px; color: var(--muted); transition: opacity 0.2s; }
+.cr-streams { position: absolute; top: 50%; right: 0; transform: translateY(-50%); display: flex; gap: 4px; opacity: 0; transition: opacity 0.2s; }
+
+/* ── NEWS: magazine grid ── */
+.news-mag {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.ncard { background: var(--bg2); cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; }
+.ncard:hover { background: var(--card); }
+.ncard.hero { grid-column: span 2; grid-row: span 2; display: grid; grid-template-rows: 1fr auto; }
+.ncard-img { overflow: hidden; }
+.ncard.hero .ncard-img { height: 320px; }
+.ncard:not(.hero) .ncard-img { height: 140px; }
+.ncard-img svg { display: block; width: 100%; height: 100%; }
+.ncard-body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; }
+.ncard-cat { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 7px; }
+.ncard-head { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; flex: 1; margin-bottom: 8px; }
+.ncard.hero .ncard-head { font-size: 28px; }
+.ncard-exc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+.ncard-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.ncard-read { background: none; border: none; color: var(--amber); font-family: var(--font-mono); font-size: 10px; cursor: pointer; transition: opacity 0.2s; }
+.ncard-read:hover { opacity: 0.7; }
+
+/* ── REVIEWS: horizontal band of 4 ── */
+.rev4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.rcard { background: var(--bg2); display: flex; flex-direction: column; cursor: pointer; transition: background 0.2s; }
+.rcard:hover { background: var(--card); }
+.rcard-art { width: 100%; aspect-ratio: 1; position: relative; overflow: hidden; background: var(--bg3); flex-shrink: 0; }
+.rcard-art svg { display: block; width: 100%; height: 100%; }
+.rcard-score-wrap { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,10,11,0.96), transparent); padding: 24px 14px 10px; }
+.rcard-score { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--amber); line-height: 1; }
+.rcard-score span { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.rcard-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; }
+.rcard-genre { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.rcard-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; margin-bottom: 2px; }
+.rcard-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.rcard-sum { font-size: 12px; color: var(--muted); line-height: 1.55; flex: 1; margin-bottom: 14px; }
+.rcard-stream { display: flex; gap: 6px; margin-bottom: 10px; }
+.rcard-btn { background: none; border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px; cursor: pointer; transition: all 0.2s; text-align: center; }
+.rcard-btn:hover { color: var(--amber); border-color: var(--amber); }
+
+/* ── FEATURED ALBUM ── */
+.feat-album { display: grid; grid-template-columns: 420px 1fr; border: 1px solid var(--border); overflow: hidden; }
+.feat-art { position: relative; min-height: 420px; background: var(--bg3); overflow: hidden; }
+.feat-art svg { display: block; width: 100%; height: 100%; }
+.feat-art-overlay { position: absolute; inset: 0; background: linear-gradient(120deg, rgba(255,140,0,0.12), transparent 55%); }
+.feat-body { background: var(--bg2); border-left: 1px solid var(--border); padding: 44px 48px; display: flex; flex-direction: column; justify-content: space-between; }
+.feat-eyebrow { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.feat-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--amber); }
+.feat-title { font-family: var(--font-display); font-size: 60px; font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -1.5px; color: var(--text); margin-bottom: 6px; }
+.feat-artist { font-family: var(--font-mono); font-size: 13px; color: var(--muted); margin-bottom: 26px; }
+.feat-stats { display: flex; gap: 28px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.feat-stat-n { font-family: var(--font-display); font-size: 26px; font-weight: 900; color: var(--amber); line-height: 1; }
+.feat-stat-l { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 3px; }
+.feat-review { font-size: 14px; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--amber); padding-left: 18px; margin-bottom: 28px; flex: 1; }
+.feat-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-feat-listen { flex: 1; min-width: 120px; background: var(--amber); color: #000; font-family: var(--font-display); font-size: 14px; font-weight: 900; text-transform: uppercase; padding: 13px; border: none; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-feat-listen:hover { background: var(--amber2); }
+.btn-feat-review { background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; padding: 13px 20px; cursor: pointer; transition: all 0.2s; }
+.btn-feat-review:hover { color: var(--text); border-color: var(--amber); }
+.feat-stream-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.btn-stream-text { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1px solid var(--border2); font-family: var(--font-mono); font-size: 11px; color: var(--muted); cursor: pointer; transition: all 0.2s; background: none; text-decoration: none; }
+.btn-stream-text:hover { color: var(--text); border-color: var(--text); }
+.btn-stream-text .sdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sp-dot { background: #1DB954; }
+.am-dot { background: #FB233B; }
+.yt-dot { background: #FF0000; }
+
+/* ── GENRES: compact strip ── */
+.genre-strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); align-items: stretch; }
+.gcard { background: var(--bg2); padding: 22px 18px; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden; }
+.gcard::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--amber); transform: scaleX(0); transform-origin: left; transition: transform 0.2s; }
+.gcard:hover::after { transform: scaleX(1); }
+.gcard:hover { background: var(--bg3); }
+.gcard:hover .gcard-name { color: var(--amber); }
+.gcard-icon { font-size: 20px; color: var(--muted); flex-shrink: 0; width: 36px; text-align: center; }
+.gcard-info { }
+.gcard-name { font-family: var(--font-display); font-size: 15px; font-weight: 800; text-transform: uppercase; color: var(--text); transition: color 0.2s; line-height: 1; }
+.gcard-count { font-family: var(--font-mono); font-size: 9px; color: var(--muted); margin-top: 3px; }
+
+/* ── ARTISTS: 4-up with streaming ── */
+.artists4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+.acard { background: var(--bg2); display: flex; flex-direction: column; cursor: pointer; transition: background 0.2s; }
+.acard:hover { background: var(--card); }
+.acard-img { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--bg3); position: relative; flex-shrink: 0; }
+.acard-img svg { display: block; width: 100%; height: 100%; transition: transform 0.4s; }
+.acard:hover .acard-img svg { transform: scale(1.04); }
+.acard-rank { position: absolute; top: 10px; left: 12px; font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--amber); text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+.acard-body { padding: 16px 18px; flex: 1; display: flex; flex-direction: column; }
+.acard-name { font-family: var(--font-display); font-size: 19px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; margin-bottom: 3px; }
+.acard-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.acard-listeners { display: flex; align-items: baseline; gap: 4px; margin-bottom: 12px; }
+.acard-listeners-n { font-family: var(--font-display); font-size: 20px; font-weight: 900; color: var(--text); }
+.acard-listeners-l { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.acard-streams { display: flex; gap: 6px; margin-bottom: 12px; }
+.acard-profile { background: none; border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px; cursor: pointer; transition: all 0.2s; text-align: center; margin-top: auto; }
+.acard-profile:hover { color: var(--amber); border-color: var(--amber); }
+
+/* ── RECENTLY REVIEWED horizontal scroll ── */
+.rec-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; }
+.rec-scroll-wrap::-webkit-scrollbar { height: 2px; }
+.rec-scroll-wrap::-webkit-scrollbar-thumb { background: var(--amber); }
+.rec-scroll { display: flex; gap: 1px; background: var(--border); border: 1px solid var(--border); width: max-content; min-width: 100%; }
+.reccard { background: var(--bg2); width: 210px; flex-shrink: 0; cursor: pointer; transition: background 0.2s; display: flex; flex-direction: column; }
+.reccard:hover { background: var(--card); }
+.reccard-art { width: 100%; aspect-ratio: 1; overflow: hidden; background: var(--bg3); position: relative; }
+.reccard-art svg { display: block; width: 100%; height: 100%; }
+.reccard-score { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(10,10,11,0.96), transparent); padding: 20px 12px 8px; font-family: var(--font-display); font-size: 28px; font-weight: 900; color: var(--amber); line-height: 1; }
+.reccard-body { padding: 12px 14px 14px; }
+.reccard-title { font-family: var(--font-display); font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.1; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reccard-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.reccard-streams { display: flex; gap: 5px; }
+
+/* ── NEWSLETTER ── */
+.mnl { background: var(--bg3); border: 1px solid var(--border2); border-left: 3px solid var(--amber); display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 52px 56px; }
+.mnl-title { font-family: var(--font-display); font-size: 46px; font-weight: 900; text-transform: uppercase; line-height: 0.92; letter-spacing: -0.5px; margin-bottom: 12px; }
+.mnl-title span { color: var(--amber); }
+.mnl-desc { font-size: 14px; color: var(--muted); line-height: 1.75; }
+.mnl-form { display: flex; flex-direction: column; gap: 10px; }
+.mnl-input { background: var(--bg); border: 1px solid var(--border2); color: var(--text); font-family: var(--font-body); font-size: 14px; padding: 14px 16px; outline: none; transition: border-color 0.2s; }
+.mnl-input:focus { border-color: var(--amber); }
+.mnl-input::placeholder { color: var(--muted); }
+.mnl-btn { background: var(--amber); color: #000; font-family: var(--font-display); font-size: 16px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; padding: 14px; border: none; cursor: pointer; transition: background 0.2s; }
+.mnl-btn:hover { background: var(--amber2); }
+.mnl-note { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-align: center; }
+.mnl-toast { display: none; font-family: var(--font-mono); font-size: 12px; color: var(--green); text-align: center; padding: 12px; border: 1px solid rgba(74,222,128,0.25); background: rgba(74,222,128,0.06); }
+
+/* ── GENRE TRENDING ── */
+.genre-trending {
+  border: 1px solid var(--border); border-top: none;
+  background: var(--bg2);
+}
+.gt-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid var(--border);
+  background: var(--bg3);
+}
+.gt-label {
+  font-family: var(--font-mono); font-size: 10px; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  display: flex; align-items: center; gap: 10px;
+}
+.gt-active-genre {
+  font-family: var(--font-display); font-size: 14px; font-weight: 800;
+  text-transform: uppercase; color: var(--amber); letter-spacing: 0.04em;
+}
+.gt-hint { font-family: var(--font-mono); font-size: 10px; color: var(--muted); opacity: 0.6; }
+.gt-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 1px; background: var(--border);
+}
+.gt-track {
+  background: var(--bg2); padding: 14px 16px;
+  cursor: pointer; transition: background 0.2s;
+  display: flex; flex-direction: column; gap: 8px;
+  min-width: 160px; max-width: 160px; flex-shrink: 0;
+  height: 100%; box-sizing: border-box; overflow: hidden;
+}
+.gt-track:hover { background: var(--card); }
+.gt-track-art {
+  width: 100%; aspect-ratio: 1; overflow: hidden;
+  border: 1px solid var(--border); position: relative; margin-bottom: 2px;
+}
+.gt-track-art svg { display: block; width: 100%; height: 100%; }
+.gt-track-rank {
+  position: absolute; top: 6px; left: 8px;
+  font-family: var(--font-display); font-size: 20px; font-weight: 900;
+  color: var(--amber); text-shadow: 0 1px 6px rgba(0,0,0,0.8); line-height: 1;
+}
+.gt-track-name {
+  font-family: var(--font-display); font-size: 13px; font-weight: 800;
+  text-transform: uppercase; color: var(--text); line-height: 1.1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.gt-track-artist { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.gt-track-plays { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 2px; }
+.gt-track-streams { display: flex; gap: 4px; margin-top: 4px; }
+.gt-empty {
+  padding: 40px 24px; text-align: center;
+  font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+  grid-column: 1 / -1;
+}
+
+.gcard.genre-active { background: var(--bg3); }
+.gcard.genre-active::after { transform: scaleX(1); }
+.gcard.genre-active .gcard-name { color: var(--amber); }
+
+/* ── responsive ── */
+@media (max-width: 1200px) {
+  .mhero { grid-template-columns: 1fr 380px; }
+  .mhero-title { font-size: 76px; }
+  .feat-album { grid-template-columns: 360px 1fr; }
+  .feat-title { font-size: 48px; }
+  .genre-strip { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 1024px) {
+  .mhero { grid-template-columns: 1fr; min-height: auto; }
+  .mhero-right { height: 300px; grid-template-columns: repeat(4, 1fr); grid-template-rows: 1fr; border-left: none; border-top: 1px solid var(--border); }
+  .mhero-left { padding: 48px 24px 40px; }
+  .browse-3col { grid-template-columns: 1fr; }
+  .album-mini-grid { grid-template-columns: 1fr 1fr; }
+  .artists4 { grid-template-columns: repeat(2, 1fr); }
+  .feat-album { grid-template-columns: 1fr; }
+  .feat-art { min-height: 240px; }
+  .feat-body { border-left: none; border-top: 1px solid var(--border); padding: 32px 28px; }
+  .chart-table-wrap { overflow-x: auto; }
+  .chart-table-head, .chart-row { min-width: 700px; }
+  .rev4 { grid-template-columns: repeat(2, 1fr); }
+  .mnl { grid-template-columns: 1fr; gap: 28px; padding: 36px 28px; }
+  .gt-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .mhero-title { font-size: 58px; letter-spacing: -1.5px; }
+  .genre-strip { grid-template-columns: repeat(3, 1fr); }
+  .news-mag { grid-template-columns: 1fr; }
+  .ncard.hero { grid-column: span 1; grid-row: span 1; }
+  .ncard.hero .ncard-img { height: 200px; }
+  .ncard.hero .ncard-head { font-size: 22px; }
+  .mhero-right { grid-template-columns: repeat(2, 1fr); height: 260px; }
+  .gt-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .mhero-title { font-size: 44px; letter-spacing: -1px; }
+  .mhero-left { padding: 36px 16px 32px; }
+  .genre-strip { grid-template-columns: repeat(2, 1fr); }
+  .rev4 { grid-template-columns: 1fr; }
+  .artists4 { grid-template-columns: 1fr; }
+  .mhero-right { height: 220px; }
+  .feat-title { font-size: 36px; }
+  .feat-actions { flex-direction: column; }
+  .mnl-title { font-size: 36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ═══════════════════════════════════════════════════ -->
+<section class="mhero">
+  <div class="mhero-left">
+    <div>
+      <div class="mhero-eyebrow">Soundb Music</div>
+      <h1 class="mhero-title">Dis<em>cover</em><br>Music</h1>
+      <p class="mhero-sub">Editorial reviews, global charts, and local releases — from international bestsellers to what's breaking in your city. Music without borders, with full context.</p>
+      <div class="mhero-cta">
+        <button class="btn-mhero-primary" onclick="document.getElementById('sec-browse').scrollIntoView({behavior:'smooth'})">Explore Releases</button>
+        <button class="btn-mhero-ghost" onclick="document.getElementById('sec-genres').scrollIntoView({behavior:'smooth'})">Browse by Genre →</button>
+      </div>
+      <div class="loc-badge" id="loc-badge"><span class="loc-dot"></span><span id="loc-text">Detecting location…</span></div>
+      <div class="mhero-stats" id="mhero-stats">
+        <div><div class="mhero-stat-n" id="stat-albums">—</div><div class="mhero-stat-l">Albums reviewed</div></div>
+        <div><div class="mhero-stat-n" id="stat-countries">232</div><div class="mhero-stat-l">Countries tracked</div></div>
+        <div><div class="mhero-stat-n" id="stat-frequency">Weekly</div><div class="mhero-stat-l">New reviews</div></div>
+        <div><div class="mhero-stat-n" id="stat-streams">—</div><div class="mhero-stat-l">Listeners tracked</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="mhero-right" id="hero-art-grid"></div>
+  <svg class="mhero-waveform" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="0,24 80,14 160,34 240,8 320,30 400,12 480,28 560,6 640,26 720,10 800,32 880,4 960,28 1040,14 1120,34 1200,8 1280,26 1360,10 1440,24" fill="none" stroke="#FF8C00" stroke-width="1.5"/>
+  </svg>
+</section>
+
+<!-- ══ BROWSE BY REGION ════════════════════════════════════════ -->
+<section class="msec" id="sec-browse">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Browse by Region</span>
+      <span class="msec-link">All regions →</span>
+    </div>
+    <div class="browse-3col">
+      <!-- COL 1: International (pinned) -->
+      <div class="bcol pinned">
+        <div class="bcol-head">
+          <div><div class="bcol-title">International</div><div class="bcol-sub">Global Charts</div></div>
+          <div class="bcol-badge">Global</div>
+        </div>
+        <div class="bcol-body">
+          <div class="bcol-sublabel">Latest Releases</div>
+          <div class="album-mini-grid" id="intl-albums"></div>
+          <div class="bcol-sublabel">Trending Now — hover to stream</div>
+          <div id="intl-tracks"></div>
+        </div>
+        <div class="bcol-foot"><button class="btn-bcol-all">View All International →</button></div>
+      </div>
+      <!-- COL 2: Country Latest -->
+      <div class="bcol">
+        <div class="bcol-head">
+          <div><div class="bcol-title" id="col2-title">Latest in India</div><div class="bcol-sub">New Releases</div></div>
+          <div class="bcol-badge" id="col2-badge">Local</div>
+        </div>
+        <div class="bcol-body">
+          <div class="bcol-sublabel">Latest Albums</div>
+          <div class="album-mini-grid" id="country-albums"></div>
+          <div class="bcol-sublabel">New Singles — hover to stream</div>
+          <div id="country-tracks"></div>
+        </div>
+        <div class="bcol-foot"><button class="btn-bcol-all" id="col2-btn">View All India Releases →</button></div>
+      </div>
+      <!-- COL 3: Country Trending -->
+      <div class="bcol">
+        <div class="bcol-head">
+          <div><div class="bcol-title" id="col3-title">Trending in India</div><div class="bcol-sub">Most Played</div></div>
+          <div class="bcol-badge bcol-hot">Hot</div>
+        </div>
+        <div class="bcol-body">
+          <div class="bcol-sublabel">Top Streamed — hover to stream</div>
+          <div id="trending-tracks"></div>
+          <div class="bcol-sublabel">Popular Artists</div>
+          <div id="trending-artists"></div>
+        </div>
+        <div class="bcol-foot"><button class="btn-bcol-all" id="col3-btn">View All India Charts →</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GLOBAL TOP 10 ══════════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Global Top 10 — hover a track to see streaming links</span>
+      <span class="msec-link" onclick="location.href='soundb-news.html'">Full chart →</span>
+    </div>
+    <div class="chart-table-wrap">
+      <div class="chart-table-head">
+        <span>#</span><span>Art</span><span>Title / Artist</span><span style="text-align:right">Listeners</span>
+      </div>
+      <div id="global-chart"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MUSIC NEWS ═════════════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Latest Music News</span>
+      <span class="msec-link" onclick="location.href='soundb-news.html'">All news →</span>
+    </div>
+    <div class="news-mag" id="news-mag"></div>
+  </div>
+</section>
+
+<!-- ══ SOUNDB REVIEWS ═════════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Soundb Music Reviews</span>
+      <span class="msec-link" onclick="location.href='soundb-reviews.html'">All reviews →</span>
+    </div>
+    <div class="rev4" id="rev4"></div>
+  </div>
+</section>
+
+<!-- ══ FEATURED ALBUM ═════════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Featured Album</span>
+      <span class="msec-link">Editor's Pick →</span>
+    </div>
+    <div class="feat-album" id="feat-album-wrap">
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:40px 0">Loading…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ GENRES ════════════════════════════════════════════════ -->
+<section class="msec" id="sec-genres">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Browse by Genre</span>
+      <span class="msec-link">All genres →</span>
+    </div>
+    <div class="genre-strip" id="genre-strip"></div>
+    <!-- Genre trending panel — updates on genre click -->
+    <div class="genre-trending">
+      <div class="gt-header">
+        <div class="gt-label">
+          Trending in
+          <span class="gt-active-genre" id="gt-active-genre">All Genres</span>
+        </div>
+        <span class="gt-hint">Select a genre above to filter</span>
+      </div>
+      <div class="gt-grid" id="gt-grid" style="display:flex;flex-direction:row;gap:1px;background:var(--border);overflow-x:auto;scrollbar-width:thin;height:280px;align-items:stretch"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TRENDING ARTISTS ═══════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Trending Artists</span>
+      <span class="msec-link">View all →</span>
+    </div>
+    <div class="artists4" id="artists4"></div>
+  </div>
+</section>
+
+<!-- ══ RECENTLY REVIEWED ══════════════════════════════════════ -->
+<section class="msec">
+  <div class="container">
+    <div class="msec-header">
+      <span class="msec-title">Recently Reviewed</span>
+      <span class="msec-link" onclick="location.href='soundb-reviews.html'">All reviews →</span>
+    </div>
+    <div class="rec-scroll-wrap">
+      <div class="rec-scroll" id="rec-scroll"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ════════════════════════════════════════════ -->
+<section class="msec" style="border-bottom:none">
+  <div class="container">
+    <div class="mnl">
+      <div>
+        <div class="mnl-title">Sound<span>b</span><br>Music Brief</div>
+        <p class="mnl-desc">Every week: the most important new albums, the reviews that matter, and the news stories shaping music culture globally. In your inbox. No noise, ever.</p>
+      </div>
+      <div class="mnl-form">
+        <input class="mnl-input" id="mnl-email" type="email" placeholder="Your email address">
+        <button class="mnl-btn" id="mnl-btn">Subscribe to Music Brief →</button>
+        <div class="mnl-toast" id="mnl-toast">✓ You're subscribed to the Music Brief!</div>
+        <div class="mnl-note">Weekly · No spam · Unsubscribe anytime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ══ SPOTIFY API ════════════════════════════════════════════════
+   Uses Spotify's official curated chart playlists (update daily).
+   Client Credentials flow — no user login needed.
+   NOTE: Move CLIENT_SECRET to Strapi proxy before production.
+═══════════════════════════════════════════════════════════════ */
+const SP_CLIENT_ID     = '8c7d45a102d74b0ba0e0031c9e2b868e';
+const SP_CLIENT_SECRET = '1233502ba22f46c0b5544a2d302e00b1';
+var SP_TOKEN = null;
+var SP_TOKEN_EXPIRY = 0;
+
+// Spotify search queries for charts (playlists require user auth)
+// We use popularity-sorted searches as chart proxy
+const SP_CHART_QUERIES = {
+  globalTop:   'year:2024-2025',
+  indiaTop:    'year:2024-2025',
+  indiaViral:  'year:2025',
+};
+
+function getSpotifyToken() {
+  if (SP_TOKEN && Date.now() < SP_TOKEN_EXPIRY) return Promise.resolve(SP_TOKEN);
+  return fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=client_credentials&client_id=' + SP_CLIENT_ID + '&client_secret=' + SP_CLIENT_SECRET,
+  }).then(function(r) { return r.json(); })
+    .then(function(d) {
+      SP_TOKEN = d.access_token;
+      SP_TOKEN_EXPIRY = Date.now() + (d.expires_in - 60) * 1000;
+      console.log('[Spotify] Token acquired');
+      return SP_TOKEN;
+    });
+}
+
+function spGet(endpoint) {
+  var base = (window.location.hostname === 'localhost')
+    ? 'http://localhost:1337/spotify-proxy'
+    : '/spotify-proxy';
+  // Always encode the full endpoint including any query strings
+  return fetch(base + '?endpoint=' + encodeURIComponent(endpoint))
+    .then(function(r) { return r.json(); })
+    .catch(function(e) { console.error('[spGet] error:', endpoint, e.message); return {}; });
+}
+
+// Search for artist
+function spSearchArtist(name) {
+  return spGet('search?q=' + encodeURIComponent(name) + '&type=artist&limit=1&market=IN');
+}
+
+// Map Spotify track to internal format
+function mapSpTrack(item, i) {
+  var t = item.track;
+  if (!t) return null;
+  var c = col(i);
+  var artistName = t._artistName || (t.artists && t.artists[0] ? t.artists[0].name : '');
+  var img = t.album && t.album.images && t.album.images[0] ? t.album.images[0].url : null;
+  return {
+    rank:   i + 1,
+    title:  t.name,
+    artist: artistName,
+    album:  t.album ? t.album.name : '',
+    genre:  '—',
+    plays:  (t.popularity !== undefined && t.popularity !== null) ? t.popularity + ' popularity' : '—',
+    isNew:  false,
+    img:    img,
+    c1: c[0], c2: c[1],
+    sp: t.external_urls ? t.external_urls.spotify : '',
+    am: 'https://music.apple.com/search?term=' + encodeURIComponent(t.name + ' ' + artistName),
+    yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.name + ' ' + artistName),
+    id: t.id,
+  };
+}
+
+// Map Spotify track to album format
+function mapSpAlbum(item, i, reviews) {
+  var t = item.track;
+  if (!t || !t.album) return null;
+  var c = col(i);
+  var artistName = t.artists && t.artists[0] ? t.artists[0].name : '';
+  var albumName = t.album.name;
+  var img = t.album.images && t.album.images[0] ? t.album.images[0].url : null;
+  var review = reviews.find(function(r) {
+    return r.artist && r.artist.toLowerCase() === artistName.toLowerCase();
+  });
+  return {
+    title:  albumName,
+    artist: artistName,
+    score:  review ? review.score : null,
+    summary: review ? review.summary : '',
+    img:    img,
+    c1: review ? (review.color1||c[0]) : c[0],
+    c2: review ? (review.color2||c[1]) : c[1],
+    sp: t.album.external_urls ? t.album.external_urls.spotify : '',
+    am: 'https://music.apple.com/search?term=' + encodeURIComponent(albumName + ' ' + artistName),
+    yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(albumName + ' ' + artistName),
+  };
+}
+
+// iTunes API — search for artist, use their most popular album art as portrait
+// Best free CORS-friendly option available without a proxy
+function itunesArtistPhoto(artistName) {
+  return fetch('https://itunes.apple.com/search?term=' + encodeURIComponent(artistName) + '&media=music&entity=musicArtist&limit=1')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      // musicArtist entity doesn't return images directly
+      // Fall back to searching their top song and using album art
+      if (!d.results || !d.results.length) return null;
+      var artistId = d.results[0].artistId;
+      return fetch('https://itunes.apple.com/lookup?id=' + artistId + '&entity=song&limit=1')
+        .then(function(r) { return r.json(); })
+        .then(function(d2) {
+          var song = (d2.results || []).find(function(r) { return r.wrapperType === 'track'; });
+          if (song && song.artworkUrl100) {
+            return song.artworkUrl100.replace('100x100bb', '600x600bb');
+          }
+          return null;
+        });
+    }).catch(function() { return null; });
+}
+
+// Enrich artists with iTunes photos
+function enrichArtistsWithPhotos(artists, onDone) {
+  Promise.all(artists.map(function(a) {
+    return itunesArtistPhoto(a.name)
+      .then(function(url) { if (url) a.img = url; });
+  })).then(function() { if (onDone) onDone(); });
+}
+
+// iTunes Search API — free, no auth, returns album art
+function itunesArt(artist, track) {
+  var q = encodeURIComponent(track + ' ' + artist);
+  return fetch('https://itunes.apple.com/search?term=' + q + '&media=music&limit=1&entity=song')
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.results && d.results[0] && d.results[0].artworkUrl100) {
+        // Upscale from 100x100 to 600x600
+        return d.results[0].artworkUrl100.replace('100x100', '600x600');
+      }
+      return null;
+    }).catch(function() { return null; });
+}
+
+// Enrich an array of track/album objects with iTunes art
+// Updates img field in place and calls re-render callback
+function enrichWithArt(items, getArtist, getTitle, onDone) {
+  Promise.all(items.map(function(item) {
+    return itunesArt(getArtist(item), getTitle(item))
+      .then(function(url) { if (url) item.img = url; });
+  })).then(function() { if (onDone) onDone(); });
+}
+
+// Colour palette — assigned by index so each track/album gets a unique colour
+const COLOURS = [
+  ['#1a0a0a','#FF4040'], ['#0d1a2e','#4080FF'], ['#0a1a0a','#60C040'],
+  ['#1a0a1a','#CCFF00'], ['#1a1a0a','#FFCC00'], ['#0a0a1a','#8080FF'],
+  ['#0a1a1a','#40C0C0'], ['#1a0a14','#C040FF'], ['#140a0a','#FF8C00'],
+  ['#0a140a','#40C060'], ['#14140a','#C0A020'], ['#0a0a14','#6080FF'],
+];
+function col(i) { return COLOURS[i % COLOURS.length]; }
+
+// Map Last.fm track to internal format
+function mapTrack(t, i, genre) {
+  var c = col(i);
+  var artistName = t.artist && t.artist.name ? t.artist.name : (t.artist || '');
+  return {
+    rank:   i + 1,
+    title:  t.name,
+    artist: artistName,
+    album:  t.album  && t.album.title ? t.album.title  : '',
+    genre:  (typeof genre === 'string' ? genre : null) || (t.toptags && t.toptags.tag && t.toptags.tag[0] ? (t.toptags.tag[0].name || '—') : '—'),
+    plays:  t.playcount ? formatPlays(Number(t.playcount)) : (t.listeners ? formatPlays(Number(t.listeners)) : '—'),
+    isNew:  false,
+    c1: c[0], c2: c[1],
+    sp: 'https://open.spotify.com/search/' + encodeURIComponent(t.name + ' ' + artistName),
+    am: 'https://music.apple.com/search?term=' + encodeURIComponent(t.name + ' ' + artistName),
+    yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.name + ' ' + artistName),
+  };
+}
+
+// Map Last.fm album to internal format
+function mapAlbum(a, i, reviews) {
+  var c = col(i);
+  var artistName = a.artist && a.artist.name ? a.artist.name : (a.artist || '');
+  var albumName  = a.name || a.title || '';
+  // Match against Strapi music reviews by album/artist name
+  var review = reviews.find(function(r) {
+    return r.album && r.album.toLowerCase() === albumName.toLowerCase() &&
+           r.artist && r.artist.toLowerCase() === artistName.toLowerCase();
+  });
+  return {
+    title:  albumName,
+    artist: artistName,
+    score:  review ? review.score : null,
+    summary: review ? review.summary : '',
+    c1: review ? (review.color1 || c[0]) : c[0],
+    c2: review ? (review.color2 || c[1]) : c[1],
+    sp: 'https://open.spotify.com/search/' + encodeURIComponent(albumName + ' ' + artistName),
+    yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(albumName + ' ' + artistName),
+  };
+}
+
+function formatPlays(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return (n/1000).toFixed(1)    + 'K';
+  return String(n);
+}
+
+// Fallback colours for genres
+const GENRE_COLOURS = {
+  'pop':'#FF6080', 'rock':'#FF4040', 'hip-hop':'#FFCC00',
+  'electronic':'#4080FF', 'jazz':'#C040FF', 'classical':'#40C0C0',
+  'metal':'#808080', 'folk':'#40C060', 'indie':'#6080FF',
+  'country':'#C0A020', 'r&b':'#FF8C00', 'soul':'#FF8040',
+};
+
+/* ══ DATA — static fallbacks only (overwritten by Last.fm fetches) ══ */
+const DATA = {
+  heroArt: [
+    { title:'Loading…', artist:'', c1:'#1a0a0a', c2:'#FF4040', score:null },
+    { title:'Loading…', artist:'', c1:'#0d1a2e', c2:'#4080FF', score:null },
+    { title:'Loading…', artist:'', c1:'#0a1a0a', c2:'#60C040', score:null },
+    { title:'Loading…', artist:'', c1:'#1a0a1a', c2:'#CCFF00', score:null },
+  ],
+  internationalAlbums: [],
+  internationalTracks: [],
+  indiaAlbums: [],
+  indiaTracks: [],
+  indiaTrending: [],
+  indiaTrendingArtists: [],
+  globalChart: [],
+  musicNews: [],
+  musicReviews: [],
+  genres: [
+    { name:'Pop',       icon:'♪', count:'—' },
+    { name:'Rock',      icon:'⚡', count:'—' },
+    { name:'Hip-Hop',   icon:'🎤', count:'—' },
+    { name:'Electronic',icon:'◉', count:'—' },
+    { name:'Jazz',      icon:'♭', count:'—' },
+    { name:'Classical', icon:'♩', count:'—' },
+    { name:'Metal',     icon:'✦', count:'—' },
+    { name:'Folk',      icon:'◈', count:'—' },
+    { name:'Indie',     icon:'◇', count:'—' },
+    { name:'Country',   icon:'♦', count:'—' },
+  ],
+  byGenre: [],
+  globalArtists: [],
+  recentlyReviewed: [],
+};
+
+/* ══ SVG GENERATORS ════════════════════════════════════════════ */
+function svg(c1, c2, w, h) {
+  const id = 'g' + Math.random().toString(36).slice(2,7);
+  const W = w||200, H = h||200;
+  return `<svg width="100%" height="100%" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${W}" height="${H}" fill="${c1}"/>
+    <defs><radialGradient id="${id}" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="${c2}" stop-opacity="0.32"/>
+      <stop offset="100%" stop-color="${c1}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="${W}" height="${H}" fill="url(#${id})"/>
+    <circle cx="${W/2}" cy="${H/2}" r="${W*0.3}" fill="none" stroke="${c2}" stroke-width="0.7" opacity="0.28"/>
+    <circle cx="${W/2}" cy="${H/2}" r="${W*0.15}" fill="${c2}" opacity="0.16"/>
+    <circle cx="${W/2}" cy="${H/2}" r="${W*0.055}" fill="${c2}" opacity="0.9"/>
+  </svg>`;
+}
+
+function newsSVG(c) {
+  const id = 'n' + Math.random().toString(36).slice(2,5);
+  return `<svg width="100%" height="100%" viewBox="0 0 600 280" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <rect width="600" height="280" fill="${c}"/>
+    <defs><radialGradient id="${id}" cx="25%" cy="60%" r="65%">
+      <stop offset="0%" stop-color="#FF8C00" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="600" height="280" fill="url(#${id})"/>
+    <polyline points="0,140 80,95 160,168 240,72 320,128 400,58 480,112 560,78 600,105" fill="none" stroke="#FF8C00" stroke-width="1.8" opacity="0.55" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+}
+
+function artistSVG(c1, c2) {
+  const id = 'a' + Math.random().toString(36).slice(2,5);
+  return `<svg width="100%" height="100%" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+    <rect width="300" height="300" fill="${c1}"/>
+    <defs><radialGradient id="${id}" cx="50%" cy="38%" r="58%">
+      <stop offset="0%" stop-color="${c2}" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="${c1}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="300" height="300" fill="url(#${id})"/>
+    <circle cx="150" cy="115" r="52" fill="${c2}" opacity="0.15"/>
+    <circle cx="150" cy="115" r="32" fill="${c2}" opacity="0.22"/>
+    <circle cx="150" cy="115" r="12" fill="${c2}" opacity="0.7"/>
+    <ellipse cx="150" cy="265" rx="85" ry="42" fill="${c2}" opacity="0.08"/>
+  </svg>`;
+}
+
+/* ── Streaming icon SVGs (monochrome, 12×12) ── */
+const ICONS = {
+  spotify: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`,
+  apple:   `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.984 0C5.375 0 0 5.375 0 11.984S5.375 24 11.984 24 24 18.625 24 11.984 18.593 0 11.984 0zm4.596 7.078c-.107.625-.392 1.179-.84 1.613-.447.437-1.017.69-1.614.714a2.4 2.4 0 0 1-.348-.024 2.86 2.86 0 0 0-.696-1.526 2.744 2.744 0 0 0-1.437-.857c.06-.018.12-.032.181-.043a3.07 3.07 0 0 1 1.526.165 2.65 2.65 0 0 1 1.123.815 3.2 3.2 0 0 1 .57 1.085 2.42 2.42 0 0 0 .625-.866c.143-.34.2-.71.165-1.076zm-4.596 9.48c-2.498 0-4.523-2.025-4.523-4.523s2.025-4.523 4.523-4.523 4.523 2.025 4.523 4.523-2.025 4.523-4.523 4.523zm0-7.648a3.125 3.125 0 1 0 0 6.25 3.125 3.125 0 0 0 0-6.25zm0 5.011a1.887 1.887 0 1 1 0-3.774 1.887 1.887 0 0 1 0 3.774z"/></svg>`,
+  youtube: `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>`,
+};
+
+function streamBtns(t) {
+  const sp = t.sp || 'https://open.spotify.com';
+  const am = t.am || 'https://music.apple.com';
+  const yt = t.yt || 'https://youtube.com';
+  return `<a class="stream-btn" href="${sp}" target="_blank" rel="noopener" title="Spotify" onclick="event.stopPropagation()">${ICONS.spotify}</a><a class="stream-btn" href="${am}" target="_blank" rel="noopener" title="Apple Music" onclick="event.stopPropagation()">${ICONS.apple}</a><a class="stream-btn" href="${yt}" target="_blank" rel="noopener" title="YouTube" onclick="event.stopPropagation()">${ICONS.youtube}</a>`;
+}
+
+/* ── Genre-specific trending tracks data ── */
+// GENRE_TRACKS — populated from Last.fm tag.gettoptracks API
+const GENRE_TRACKS = {};
+
+// Genre config — Last.fm tag name, display name, icon
+const GENRES_CONFIG = [
+  { tag:'pop',        name:'Pop',        icon:'♪' },
+  { tag:'hip-hop',    name:'Hip-Hop',    icon:'🎤' },
+  { tag:'electronic', name:'Electronic', icon:'◉' },
+  { tag:'rock',       name:'Rock',       icon:'⚡' },
+  { tag:'jazz',       name:'Jazz',       icon:'♭' },
+  { tag:'classical',  name:'Classical',  icon:'♩' },
+  { tag:'metal',      name:'Metal',      icon:'✦' },
+  { tag:'indie',      name:'Indie',      icon:'◇' },
+  { tag:'rnb',        name:'R&B',        icon:'♥' },
+  { tag:'folk',       name:'Folk',       icon:'◈' },
+];
+
+// Spotify genre search queries — varied artists per genre for diversity
+var SP_GENRE_QUERIES = {
+  'Pop':        'Taylor Swift OR Sabrina Carpenter OR Ariana Grande',
+  'Hip-Hop':    'Kendrick Lamar OR Drake OR Tyler the Creator',
+  'Electronic': 'Calvin Harris OR David Guetta OR Martin Garrix',
+  'Rock':       'Coldplay OR Arctic Monkeys OR Imagine Dragons',
+  'Jazz':       'Miles Davis OR John Coltrane OR Norah Jones',
+  'Classical':  'Beethoven OR Mozart OR Chopin',
+  'Metal':      'Metallica OR Iron Maiden OR Black Sabbath',
+  'Indie':      'Arctic Monkeys OR The Strokes OR Tame Impala',
+  'R&B':        'Beyonce OR SZA OR Frank Ocean',
+  'Folk':       'Bon Iver OR Fleet Foxes OR Mumford and Sons',
+};
+
+function fetchGenreTracks() {
+  getSpotifyToken().then(function() {
+    return Promise.all(
+      GENRES_CONFIG.map(function(g, gIdx) {
+        var query = SP_GENRE_QUERIES[g.name];
+        if (!query) return Promise.resolve({ g: g, mapped: [] });
+        return spGet('search?q=' + encodeURIComponent(query) + '&type=track&limit=10&market=IN')
+          .then(function(d) {
+            if (d.error) { console.warn('[Music] Genre search error:', g.name, d.error.message); return { g: g, mapped: [] }; }
+            var tracks = (d.tracks && d.tracks.items) || [];
+            var mapped = tracks.map(function(t, i) {
+              var c = col(gIdx * 5 + i);
+              var artistName = t.artists && t.artists[0] ? t.artists[0].name : '';
+              var img = t.album && t.album.images && t.album.images[0] ? t.album.images[0].url : null;
+              return {
+                rank:   i + 1,
+                title:  t.name,
+                artist: artistName,
+                genre:  g.name,
+                plays:  (t.popularity !== undefined && t.popularity !== null) ? t.popularity + ' popularity' : '—',
+                img:    img,
+                c1: c[0], c2: c[1],
+                sp: t.external_urls ? t.external_urls.spotify : '',
+                am: 'https://music.apple.com/search?term=' + encodeURIComponent(t.name + ' ' + artistName),
+                yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(t.name + ' ' + artistName),
+              };
+            });
+            GENRE_TRACKS[g.name] = mapped;
+            return { g: g, mapped: mapped };
+          }).catch(function() {
+            GENRE_TRACKS[g.name] = [];
+            return { g: g, mapped: [] };
+          });
+      })
+    );
+  }).then(function(results) {
+    var allTracks = [];
+    results.forEach(function(r) {
+      if (r.mapped && r.mapped.length) allTracks.push(Object.assign({}, r.mapped[0], { genre: r.g.name }));
+    });
+    GENRE_TRACKS['All Genres'] = allTracks.map(function(t, i) {
+      return Object.assign({}, t, { rank: i + 1 });
+    });
+    DATA.genres = GENRES_CONFIG.map(function(g) {
+      var tracks = GENRE_TRACKS[g.name] || [];
+      return { name: g.name, icon: g.icon, count: tracks.length };
+    });
+    renderGenres();
+    renderGenreTracks('All Genres');
+  }).catch(function(e) {
+    console.warn('[Music] Genre fetch error:', e.message);
+  });
+}
+
+let activeGenre = 'All Genres';
+
+function renderGenreTracks(genreName) {
+  const tracks = GENRE_TRACKS[genreName] || GENRE_TRACKS['All Genres'] || [];
+  if (!tracks.length) {
+    document.getElementById('gt-active-genre').textContent = genreName;
+    document.getElementById('gt-grid').innerHTML = '<div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:24px">Loading…</div>';
+    return;
+  }
+  document.getElementById('gt-active-genre').textContent = genreName;
+  document.getElementById('gt-grid').innerHTML = tracks.map(t => `
+    <div class="gt-track" onclick="window.open('${t.sp}','_blank')">
+      <div class="gt-track-art" style="position:relative;overflow:hidden">
+        ${t.img
+          ? `<img src="${t.img}" alt="${t.title}" style="width:100%;height:100%;object-fit:cover;display:block">`
+          : svg(t.c1, t.c2, 160, 160)
+        }
+        <div class="gt-track-rank">${t.rank}</div>
+      </div>
+      <div class="gt-track-name">${t.title}</div>
+      <div class="gt-track-artist">${t.artist}</div>
+      ${t.plays && t.plays !== '—' ? `<div class="gt-track-plays">${t.plays} listeners</div>` : ''}
+      <div class="gt-track-streams">${streamBtns(t)}</div>
+    </div>`).join('');
+}
+
+/* ══ RENDER ═══════════════════════════════════════════════════ */
+
+function renderHeroArt() {
+  document.getElementById('hero-art-grid').innerHTML = DATA.heroArt.map(a => `
+    <div class="mhero-art" style="position:relative;overflow:hidden;display:flex;flex-direction:column;">
+      <div style="position:absolute;inset:0;z-index:0">
+        ${a.img
+          ? `<img src="${a.img}" alt="${a.title}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+          : svg(a.c1, a.c2, 240, 260)
+        }
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 60%,transparent 100%)"></div>
+      </div>
+      <div style="position:relative;z-index:1;margin-top:auto;padding:14px;">
+        ${a.score ? `<div class="mhero-art-score">${a.score}</div>` : ""}
+        <div class="mhero-art-title">${a.title}</div>
+        <div class="mhero-art-artist">${a.artist}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderAlbumMiniGrid(id, albums) {
+  document.getElementById(id).innerHTML = albums.map(a => `
+    <div class="album-mini" onclick="a.sp && window.open('${a.sp}','_blank')" style="cursor:pointer">
+      <div class="am-art">
+        ${a.img
+          ? `<img src="${a.img}" alt="${a.title}">`
+          : svg(a.c1, a.c2, 140, 140)
+        }
+        ${a.score ? `<div class="am-score">${a.score}</div>` : ''}
+      </div>
+      <div class="am-title">${a.title}</div>
+      <div class="am-artist">${a.artist}</div>
+    </div>`).join('');
+}
+
+function renderTrackRows(id, tracks) {
+  document.getElementById(id).innerHTML = tracks.map(t => `
+    <div class="trow">
+      <div class="trow-rank">${String(t.rank).padStart(2,'0')}</div>
+      <div class="trow-art" style="overflow:hidden;border-radius:2px">
+        ${t.img
+          ? `<img src="${t.img}" alt="${t.title}" style="width:36px;height:36px;object-fit:cover;display:block">`
+          : svg(t.c1||'#1a1a1a', t.c2||'#FF8C00', 36, 36)
+        }
+      </div>
+      <div class="trow-info">
+        <div class="trow-name">${t.title}${t.isNew?` <span class="trow-new">New</span>`:''}</div>
+        <div class="trow-artist">${t.artist}</div>
+      </div>
+      <div class="trow-right">
+        <div class="trow-plays">${t.plays}</div>
+        <div class="trow-streams">${streamBtns(t,'sm')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderArtistRows(id, artists) {
+  document.getElementById(id).innerHTML = artists.map(a => `
+    <div class="trow">
+      <div class="trow-rank">${String(a.rank).padStart(2,'0')}</div>
+      <div class="trow-art" style="overflow:hidden;border-radius:50%">
+        ${a.img ? `<img src="${a.img}" alt="${a.name}" style="width:36px;height:36px;object-fit:cover;display:block">` : artistSVG('#1a1a1a','#FF8C00')}
+      </div>
+      <div class="trow-info">
+        <div class="trow-name">${a.name}</div>
+        <div class="trow-artist">${a.meta}</div>
+      </div>
+      <div class="trow-right">
+        <div class="trow-plays">${a.count}</div>
+        <div class="trow-streams">${streamBtns(a,'sm')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderGlobalChart() {
+  document.getElementById('global-chart').innerHTML = DATA.globalChart.map(t => `
+    <div class="chart-row" onclick="window.open('${t.sp}','_blank')">
+      <div class="cr-num">${t.rank}</div>
+      <div style="display:flex;align-items:center"><div class="cr-art" style="overflow:hidden">${t.img ? `<img src="${t.img}" alt="${t.title}" style="width:44px;height:44px;object-fit:cover;display:block">` : svg(t.c1,t.c2,44,44)}</div></div>
+      <div><div class="cr-title">${t.title}</div><div class="cr-artist">${t.artist}</div></div>
+
+
+      <div class="cr-right">
+        <div class="cr-plays">${t.plays}</div>
+        <div class="cr-streams">${streamBtns(t,'sm')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderNews() {
+  const hero = DATA.musicNews.find(n => n.hero);
+  const rest = DATA.musicNews.filter(n => !n.hero);
+  let html = '';
+  if (hero) html += `
+    <div class="ncard hero" onclick="location.href='soundb-article.html?id='+hero.id">
+      <div class="ncard-img">${newsSVG(hero.c)}</div>
+      <div class="ncard-body">
+        <div class="ncard-cat">${hero.cat}</div>
+        <div class="ncard-head">${hero.headline}</div>
+        <div class="ncard-exc">${hero.excerpt}</div>
+        <div class="ncard-foot"><span>${hero.date} · ${hero.author}</span><button class="ncard-read" onclick="event.stopPropagation();location.href='soundb-article.html?id='+hero.id">Read →</button></div>
+      </div>
+    </div>`;
+  html += rest.map(n => `
+    <div class="ncard" onclick="location.href='soundb-article.html?id='+n.id">
+      <div class="ncard-img">${newsSVG(n.c)}</div>
+      <div class="ncard-body">
+        <div class="ncard-cat">${n.cat}</div>
+        <div class="ncard-head">${n.headline}</div>
+        <div class="ncard-exc">${n.excerpt}</div>
+        <div class="ncard-foot"><span>${n.date} · ${n.author}</span><button class="ncard-read" onclick="event.stopPropagation();location.href='soundb-article.html?id='+n.id">Read →</button></div>
+      </div>
+    </div>`).join('');
+  document.getElementById('news-mag').innerHTML = html;
+}
+
+function renderReviews() {
+  document.getElementById('rev4').innerHTML = DATA.musicReviews.map(r => `
+    <div class="rcard" onclick="location.href='soundb-review.html?id='+r.id">
+      <div class="rcard-art">
+        ${svg(r.c1, r.c2, 300, 300)}
+        <div class="rcard-score-wrap">
+          <div class="rcard-score">${r.score}<span>/10</span></div>
+        </div>
+      </div>
+      <div class="rcard-body">
+        <div class="rcard-genre">${r.genre}</div>
+        <div class="rcard-title">${r.album}</div>
+        <div class="rcard-artist">${r.artist}</div>
+        <div class="rcard-sum">${r.summary}</div>
+        <div class="rcard-stream">${streamBtns(r,'sm')}</div>
+        <button class="rcard-btn" onclick="event.stopPropagation();location.href='soundb-review.html?id='+r.id">Read Review →</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderFeaturedAlbum() {
+  var wrap = document.getElementById('feat-album-wrap');
+  if (!wrap || !DATA.musicReviews.length) return;
+  var fa = DATA.musicReviews[0];
+  var c1 = fa.color1 || fa.c1 || '#1a0a0a';
+  var c2 = fa.color2 || fa.c2 || '#FF8C00';
+  wrap.innerHTML = `
+    <div class="feat-art" id="feat-art">
+      <div class="feat-art-overlay"></div>
+      ${svg(c1, c2, 420, 500)}
+    </div>
+    <div class="feat-body">
+      <div>
+        <div class="feat-eyebrow">Album of the Month</div>
+        <div class="feat-title">${fa.album}</div>
+        <div class="feat-artist">${fa.artist} · ${fa.genre || ''}</div>
+        <div class="feat-stats">
+          <div><div class="feat-stat-n">${fa.score}</div><div class="feat-stat-l">Soundb Score</div></div>
+          <div><div class="feat-stat-n">${fa.genre || '—'}</div><div class="feat-stat-l">Genre</div></div>
+        </div>
+        <div class="feat-review">${fa.summary || ''}</div>
+      </div>
+      <div>
+        <div class="feat-actions">
+          ${fa.sp ? `<a href="${fa.sp}" target="_blank" class="btn-feat-listen">▶ Listen Now</a>` : ''}
+        </div>
+        <div class="feat-stream-row">
+          ${fa.sp ? `<a class="btn-stream-text" href="${fa.sp}" target="_blank"><span class="sdot sp-dot"></span>Spotify</a>` : ''}
+          ${fa.am ? `<a class="btn-stream-text" href="${fa.am}" target="_blank"><span class="sdot am-dot"></span>Apple Music</a>` : ''}
+          ${fa.yt ? `<a class="btn-stream-text" href="${fa.yt}" target="_blank"><span class="sdot yt-dot"></span>YouTube</a>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderGenres() {
+  document.getElementById('genre-strip').innerHTML = DATA.genres.map(g => `
+    <div class="gcard" data-genre="${g.name}" onclick="selectGenre('${g.name}')">
+      <div class="gcard-icon">${g.icon}</div>
+      <div class="gcard-info">
+        <div class="gcard-name">${g.name}</div>
+
+      </div>
+    </div>`).join('');
+}
+
+function selectGenre(name) {
+  activeGenre = name;
+  // Update active state on chips
+  document.querySelectorAll('.gcard').forEach(c => {
+    const isActive = c.dataset.genre === name;
+    c.style.background = isActive ? 'var(--bg3)' : '';
+    c.querySelector('.gcard-name').style.color = isActive ? 'var(--amber)' : '';
+    const bar = c.querySelector('.gcard::after');
+    // Use class toggle instead for the ::after pseudo-element
+    c.classList.toggle('genre-active', isActive);
+  });
+  renderGenreTracks(name);
+  // Smooth scroll to trending panel
+  document.getElementById('gt-grid').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function renderArtists() {
+  document.getElementById('artists4').innerHTML = DATA.trendingArtists.map(a => `
+    <div class="acard">
+      <div class="acard-img">
+        ${a.img ? `<img src="${a.img}" alt="${a.name}" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0">` : artistSVG(a.c1, a.c2)}
+        <div class="acard-rank">${String(a.rank).padStart(2,'0')}</div>
+      </div>
+      <div class="acard-body">
+        <div class="acard-name">${a.name}</div>
+        <div class="acard-meta">${a.genre !== "—" ? a.genre : "Artist"}</div>
+        <div class="acard-listeners">
+          <span class="acard-listeners-n">${a.listeners}</span>
+          <span class="acard-listeners-l">monthly listeners</span>
+        </div>
+        <div class="acard-streams">${streamBtns(a,'sm')}</div>
+        <button class="acard-profile" onclick="event.stopPropagation();window.open('${a.sp}','_blank')">View on Spotify →</button>
+      </div>
+    </div>`).join('');
+}
+
+function renderRecentlyReviewed() {
+  document.getElementById('rec-scroll').innerHTML = DATA.recentlyReviewed.map(r => `
+    <div class="reccard" onclick="location.href='soundb-review.html?id='+rec.id">
+      <div class="reccard-art">
+        ${svg(r.c1, r.c2, 210, 210)}
+        <div class="reccard-score">${r.score}</div>
+      </div>
+      <div class="reccard-body">
+        <div class="reccard-title">${r.album}</div>
+        <div class="reccard-artist">${r.artist}</div>
+        <div class="reccard-streams">${streamBtns(r,'sm')}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ══ LOCATION DETECTION ════════════════════════════════════════ */
+const COUNTRY = {
+  IN: { name:'India',     t2:'Latest in India',       t3:'Trending in India',       albums:'indiaAlbums', tracks:'indiaTracks', trending:'indiaTrending', tartists:'indiaTrendingArtists', b2:'View All India Releases →', b3:'View All India Charts →' },
+  US: { name:'USA',       t2:'Latest in USA',         t3:'Trending in USA',         albums:'indiaAlbums', tracks:'indiaTracks', trending:'indiaTrending', tartists:'indiaTrendingArtists', b2:'View All USA Releases →',   b3:'View All USA Charts →'   },
+  GB: { name:'UK',        t2:'Latest in UK',          t3:'Trending in UK',          albums:'indiaAlbums', tracks:'indiaTracks', trending:'indiaTrending', tartists:'indiaTrendingArtists', b2:'View All UK Releases →',    b3:'View All UK Charts →'    },
+  AU: { name:'Australia', t2:'Latest in Australia',   t3:'Trending in Australia',   albums:'indiaAlbums', tracks:'indiaTracks', trending:'indiaTrending', tartists:'indiaTrendingArtists', b2:'View All AUS Releases →',   b3:'View All AUS Charts →'   },
+  JP: { name:'Japan',     t2:'Latest in Japan',       t3:'Trending in Japan',       albums:'indiaAlbums', tracks:'indiaTracks', trending:'indiaTrending', tartists:'indiaTrendingArtists', b2:'View All Japan Releases →', b3:'View All Japan Charts →' },
+};
+
+function applyCountry(code) {
+  const cd = COUNTRY[code] || COUNTRY.IN;
+  document.getElementById('loc-text').textContent = 'Showing music for ' + cd.name;
+  document.getElementById('col2-title').textContent = cd.t2;
+  document.getElementById('col3-title').textContent = cd.t3;
+  document.getElementById('col2-badge').textContent = cd.name;
+  document.getElementById('col2-btn').textContent = cd.b2;
+  document.getElementById('col3-btn').textContent = cd.b3;
+  renderAlbumMiniGrid('country-albums', DATA[cd.albums]);
+  renderTrackRows('country-tracks', DATA[cd.tracks]);
+  renderTrackRows('trending-tracks', DATA[cd.trending]);
+  renderArtistRows('trending-artists', DATA[cd.tartists]);
+}
+
+function detectLocation() {
+  fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) })
+    .then(r => r.json()).then(d => applyCountry(d.country_code))
+    .catch(() => applyCountry('IN'));
+}
+
+/* ══ NEWSLETTER ════════════════════════════════════════════════ */
+document.getElementById('mnl-btn').addEventListener('click', function() {
+  var em = document.getElementById('mnl-email');
+  if (!em.value.trim() || !em.value.includes('@')) { em.style.borderColor='var(--red)'; em.focus(); return; }
+  em.style.borderColor='';
+  this.style.display='none';
+  document.getElementById('mnl-toast').style.display='block';
+  setTimeout(()=>{ this.style.display='block'; document.getElementById('mnl-toast').style.display='none'; em.value=''; }, 3000);
+});
+
+/* ══ INIT — Spotify + Strapi ════════════════════════════════════
+   1. Get Spotify token
+   2. Fetch chart playlists in parallel
+   3. Fetch Strapi MusicReviews for editorial scores
+   4. Merge and render everything
+═══════════════════════════════════════════════════════════════ */
+
+// Initial render
+renderHeroArt();
+fetchGenreTracks();
+
+// Step 1: Get token then fetch everything in parallel
+getSpotifyToken().then(function() {
+  // Search-based charts — playlists require user auth, search works with Client Credentials
+  function spSearch(query, limit, market) {
+    return spGet('search?q=' + encodeURIComponent(query) + '&type=track&limit=' + (limit||20) + '&market=' + (market||'IN'))
+      .then(function(d) {
+        console.log('[spSearch] query:', query.slice(0,30), 'got:', d.tracks?.items?.length, 'error:', d.error?.message);
+        if (d.error) return [];
+        return (d.tracks && d.tracks.items || []).map(function(t){ return { track: t }; });
+      }).catch(function(e) {
+        console.error('[spSearch] error:', e.message);
+        return [];
+      });
+  }
+
+  return Promise.all([
+    // Global chart — search multiple times and merge
+    Promise.all([
+      spSearch('Taylor Swift OR The Weeknd OR Drake', 10, 'US'),
+      spSearch('Kendrick Lamar OR Billie Eilish OR Olivia Rodrigo', 10, 'US'),
+    ]).then(function(r){ return r[0].concat(r[1]); }),
+    // India chart
+    Promise.all([
+      spSearch('Arijit Singh OR Diljit Dosanjh', 10, 'IN'),
+      spSearch('AP Dhillon OR Karan Aujla', 10, 'IN'),
+    ]).then(function(r){ return r[0].concat(r[1]); }),
+    // India viral
+    spSearch('Anuv Jain OR Atif Aslam OR Jubin Nautiyal', 10, 'IN'),
+    Promise.resolve([]),
+    CMS.getMusicReviews([]),
+  ]);
+}).then(function(results) {
+  console.log('[Music] results lengths:', results.map(function(r){ return Array.isArray(r) ? r.length : typeof r; }));
+
+  var globalItems = results[0] || [];
+  var indiaItems  = results[1] || [];
+  var viralItems  = results[2] || [];
+  var reviews     = results[4] || [];
+  
+  console.log('[Music] globalItems:', globalItems.length, 'indiaItems:', indiaItems.length);
+
+  DATA.musicReviews = reviews;
+  DATA.recentlyReviewed = reviews.map(function(r) {
+    return { album: r.album, artist: r.artist, score: r.score,
+             c1: r.color1||'#1a0a0a', c2: r.color2||'#FF8C00',
+             sp: r.spotifyUrl||'', am: r.appleMusicUrl||'', yt: r.youtubeUrl||'' };
+  });
+
+  // Update albums reviewed stat
+  var statAlbums = document.getElementById('stat-albums');
+  if (statAlbums) statAlbums.textContent = reviews.length > 0 ? reviews.length + '+' : '—';
+
+  // ── Global chart (top 10)
+  DATA.globalChart = globalItems.slice(0,10).map(mapSpTrack).filter(Boolean);
+  DATA.internationalTracks = globalItems.slice(0,5).map(mapSpTrack).filter(Boolean);
+
+  // Update listeners stat from popularity
+  var statStreams = document.getElementById('stat-streams');
+  if (statStreams) statStreams.textContent = globalItems.length + '+ tracks';
+
+  // ── International albums — unique albums from global top 20
+  var seenAlbums = {};
+  var intlAlbumItems = globalItems.filter(function(item) {
+    var albumId = item.track && item.track.album ? item.track.album.id : null;
+    if (!albumId || seenAlbums[albumId]) return false;
+    seenAlbums[albumId] = true;
+    return true;
+  }).slice(0,4);
+  DATA.internationalAlbums = intlAlbumItems.map(function(item, i) {
+    return mapSpAlbum(item, i, reviews);
+  }).filter(Boolean);
+
+  // ── India chart
+  DATA.indiaTracks   = indiaItems.slice(0,5).map(mapSpTrack).filter(Boolean);
+  DATA.indiaTrending = viralItems.slice(0,10).map(mapSpTrack).filter(Boolean);
+
+  // ── India albums — unique albums from India top 20
+  var seenIndiaAlbums = {};
+  var indiaAlbumItems = indiaItems.filter(function(item) {
+    var albumId = item.track && item.track.album ? item.track.album.id : null;
+    if (!albumId || seenIndiaAlbums[albumId]) return false;
+    seenIndiaAlbums[albumId] = true;
+    return true;
+  }).slice(0,4);
+  DATA.indiaAlbums = indiaAlbumItems.map(function(item, i) {
+    return mapSpAlbum(item, i+4, reviews);
+  }).filter(Boolean);
+
+  // ── Hero art from international albums
+  DATA.heroArt = DATA.internationalAlbums.slice(0,4).map(function(a) {
+    return { title: a.title, artist: a.artist, c1: a.c1, c2: a.c2, score: a.score, img: a.img };
+  });
+
+  // ── Global artists — extracted from Global Top 50 playlist
+  var seenArtists = {};
+  DATA.globalArtists = [];
+  globalItems.forEach(function(item) {
+    if (!item.track || !item.track.artists) return;
+    item.track.artists.forEach(function(a) {
+      if (!seenArtists[a.id] && DATA.globalArtists.length < 8) {
+        seenArtists[a.id] = true;
+        var c = col(DATA.globalArtists.length);
+        DATA.globalArtists.push({
+          rank: DATA.globalArtists.length + 1,
+          name: a.name,
+          genre: '—',
+          listeners: (item.track && item.track.popularity != null) ? item.track.popularity + ' popularity' : '—',
+          c1: c[0], c2: c[1],
+          img: null,
+          sp: a.external_urls ? a.external_urls.spotify : '',
+          am: 'https://music.apple.com/search?term=' + encodeURIComponent(a.name),
+          yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(a.name),
+          _spId: a.id,
+        });
+      }
+    });
+  });
+  DATA.trendingArtists = DATA.globalArtists;
+
+  // ── India trending artists — extracted from India Top 50
+  var seenIndiaArtists = {};
+  DATA.indiaTrendingArtists = [];
+  indiaItems.forEach(function(item) {
+    if (!item.track || !item.track.artists) return;
+    item.track.artists.forEach(function(a) {
+      if (!seenIndiaArtists[a.id] && DATA.indiaTrendingArtists.length < 4) {
+        seenIndiaArtists[a.id] = true;
+        var c = col(DATA.indiaTrendingArtists.length + 4);
+        DATA.indiaTrendingArtists.push({
+          rank: DATA.indiaTrendingArtists.length + 1,
+          name: a.name,
+          meta: 'India',
+          count: (item.track && item.track.popularity != null) ? item.track.popularity + ' popularity' : '—',
+          c1: c[0], c2: c[1],
+          img: null,
+          sp: a.external_urls ? a.external_urls.spotify : '',
+          yt: 'https://www.youtube.com/results?search_query=' + encodeURIComponent(a.name),
+          _spId: a.id,
+        });
+      }
+    });
+  });
+
+  // ── Render everything
+  renderHeroArt();
+  renderAlbumMiniGrid('intl-albums', DATA.internationalAlbums);
+  renderTrackRows('intl-tracks', DATA.internationalTracks);
+  renderGlobalChart();
+  renderReviews();
+  renderFeaturedAlbum();
+  renderRecentlyReviewed();
+  renderArtists();
+  applyCountry('IN');
+  detectLocation();
+
+  // ── Enrich artists with photos via search (artists endpoint requires user auth)
+  function fetchArtistPhoto(artistName) {
+    return spGet('search?q=' + encodeURIComponent(artistName) + '&type=artist&limit=1')
+      .then(function(d) {
+        var artist = d.artists && d.artists.items && d.artists.items[0];
+        return (artist && artist.images && artist.images[0]) ? artist.images[0].url : null;
+      }).catch(function() { return null; });
+  }
+
+  Promise.all(DATA.globalArtists.map(function(a) {
+    return fetchArtistPhoto(a.name).then(function(img) { if (img) a.img = img; });
+  })).then(function() {
+    DATA.trendingArtists = DATA.globalArtists;
+    renderArtists();
+  });
+
+  Promise.all(DATA.indiaTrendingArtists.map(function(a) {
+    return fetchArtistPhoto(a.name).then(function(img) { if (img) a.img = img; });
+  })).then(function() {
+    renderArtistRows('trending-artists', DATA.indiaTrendingArtists);
+  });
+
+}).catch(function(e) {
+  console.error('[Music] Spotify error:', e.message, e.stack);
+  detectLocation();
+});
+</script>
+</body>
+</html>

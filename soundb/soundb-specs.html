@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Specs — Soundb</title>
+
+<main>
+  <div class="container">
+    <div class="breadcrumb">
+      <a onclick="location.href='soundb-gear.html'">Gear</a>
+      <span class="breadcrumb-sep">/</span>
+      <span id="bc-cat">—</span>
+      <span class="breadcrumb-sep">/</span>
+      <span id="bc-name" style="color:var(--text)">—</span>
+    </div>
+
+    <div class="product-hero">
+      <div class="product-visual">
+        <div class="product-visual-frame" id="product-visual-frame"></div>
+        <div class="product-visual-thumbnails">
+          <div class="product-thumb active">
+            <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="10" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="18" cy="18" r="4" fill="currentColor" opacity="0.5"/></svg>
+          </div>
+          <div class="product-thumb">
+            <svg width="36" height="36" viewBox="0 0 36 36"><rect x="6" y="6" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1"/><line x1="6" y1="18" x2="30" y2="18" stroke="currentColor" stroke-width="0.7" opacity="0.5"/></svg>
+          </div>
+          <div class="product-thumb">
+            <svg width="36" height="36" viewBox="0 0 36 36"><polyline points="4,26 10,14 16,20 22,8 28,16 34,10" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.8"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="product-info">
+        <div class="product-eyebrow" id="info-eyebrow">—</div>
+        <h1 class="product-name" id="info-name">—</h1>
+        <div class="product-brand" id="info-brand">—</div>
+
+        <div class="product-meta-row">
+          <div>
+            <div class="product-price" id="info-price">—</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px">MRP incl. GST</div>
+          </div>
+          <div class="product-divider"></div>
+          <div>
+            <div><span class="product-score-num" id="info-score">—</span><span class="product-score-den">/10</span></div>
+            <div class="product-score-label">Soundb Score</div>
+          </div>
+          <div class="product-divider"></div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:24px;font-weight:900;color:var(--text)" id="info-cat-badge">—</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px">Category</div>
+          </div>
+        </div>
+
+        <div class="score-bars" id="score-bars"></div>
+
+        <div class="verdict-pill">
+          <div class="verdict-dot"></div>
+          <div class="verdict-text"><strong>Soundb Verdict: </strong><span id="verdict-text">—</span></div>
+        </div>
+
+        <div class="product-cta">
+          <button class="btn-primary" id="btn-review">Read Full Review</button>
+          <button class="btn-secondary" onclick="location.href='soundb-gear.html'">← Back to Gear</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn-ghost">+ Watchlist</button>
+          <button class="btn-ghost" onclick="navigator.clipboard&&navigator.clipboard.writeText(location.href)">Share Link</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs-bar">
+      <button class="tab-btn active" data-tab="specs">Specifications</button>
+      <button class="tab-btn" data-tab="overview">Overview &amp; Verdict</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-specs">
+      <div id="specs-content"></div>
+    </div>
+
+    <div class="tab-panel" id="tab-overview">
+      <div class="overview-grid" id="overview-grid"></div>
+      <div class="summary-block">
+        <div class="summary-label">Soundb Summary</div>
+        <div class="summary-text" id="overview-summary"></div>
+      </div>
+      <div class="pros-cons">
+        <div class="pros-cons-block">
+          <div class="pros-cons-title pros">What We Love</div>
+          <div id="pros-list"></div>
+        </div>
+        <div class="pros-cons-block">
+          <div class="pros-cons-title cons">Things To Know</div>
+          <div id="cons-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-title">Related in Category</div>
+        <a class="section-link" onclick="location.href='soundb-gear.html'">See all gear →</a>
+      </div>
+      <div class="related-grid" id="related-grid"></div>
+    </div>
+  </div>
+</main>
+
+
+<script>
+var GEAR = []; // populated from CMS
+
+const SPECS_DB = {
+  1:{scoreBars:[{l:'Sound Quality',v:9.4},{l:'Build Quality',v:9.0},{l:'Comfort',v:8.6},{l:'Value',v:8.2},{l:'Features',v:8.8}],verdict:'The best closed-back headphone money can buy for critical listening.',specs:[{section:'Driver & Transducer',rows:[['Driver Type','Ring Radiator dynamic (56mm)'],['Frequency Response','6 – 48,000 Hz'],['Impedance','300 Ω'],['Sensitivity','103 dB (1kHz / 1 Vrms)'],['THD','< 0.02% (1 kHz, 1 Vrms)']]},{section:'Physical',rows:[['Weight','360 g (without cable)'],['Cup Design','Closed-back with glass membrane'],['Ear Pad Material','Microfibre'],['Headband Adjustment','Stepless steel'],['Cable Length','3m balanced XLR-4 + 6.3mm adapter']]},{section:'Connectivity',rows:[['Termination','4-pin XLR + 6.35mm TRS'],['Cable Type','Replaceable, twisted-pair'],['Balanced Support','Yes, native 4-pin XLR']]},{section:'In The Box',rows:[['Included','Headphone, 3m balanced XLR cable, 3m unbalanced cable, storage case, 6.35mm adapter'],['Warranty','2 years']]}],overview:[{l:'Driver',v:'56mm Ring Radiator',hl:true},{l:'Impedance',v:'300 Ω'},{l:'Freq. Response',v:'6–48 kHz',hl:true},{l:'THD',v:'< 0.02%'},{l:'Weight',v:'360g'},{l:'Cup Type',v:'Closed-back'}],summary:"The HD 820 is Sennheiser's closed-back statement piece, using the same ring radiator driver as the open-back HD 800 S but enclosed in glass-backed cups for complete acoustic isolation. The result is a headphone that retains the extraordinary soundstage depth of the 800 series while offering real-world practicality. It demands high-quality amplification due to its 300 Ω impedance.",pros:['Glass-backed cups create a uniquely airy soundstage for a closed-back','Ring radiator driver is technically extraordinary','Replaceable cables with native balanced support','Exceptional detail retrieval and imaging'],cons:['₹1.1L price requires serious commitment','High impedance needs a dedicated amplifier','Heavy for long sessions at 360g']},
+  2:{scoreBars:[{l:'Sound Quality',v:8.8},{l:'ANC',v:9.6},{l:'Comfort',v:9.0},{l:'Battery Life',v:9.2},{l:'Features',v:9.4}],verdict:'The definitive wireless ANC headphone. Unmatched noise cancellation.',specs:[{section:'Driver & Audio',rows:[['Driver Size','40mm dynamic'],['Frequency Response','4 – 40,000 Hz'],['Impedance','48 Ω (wired)'],['Sensitivity','101 dB/mW (wired)'],['Codec Support','LDAC, AAC, SBC, LC3']]},{section:'Noise Cancellation',rows:[['ANC Type','Dual processor (QN3 chip)'],['Microphones','8 microphones (ANC + call)'],['ANC Modes','Maximum / Wind / Auto / Off'],['Transparency Mode','Yes (Ambient Sound Control)']]},{section:'Battery & Wireless',rows:[['Battery Life','30 hrs (ANC on), 40 hrs (ANC off)'],['Quick Charge','3 min = 3 hours playback'],['Bluetooth','5.3'],['Range','Up to 10m'],['Multipoint','Yes, 2 devices']]},{section:'Physical',rows:[['Weight','250g'],['Foldable','Yes, flat fold'],['Colours','Black, Midnight Blue, Silver'],['IP Rating','None']]}],overview:[{l:'Driver',v:'40mm dynamic'},{l:'ANC',v:'QN3 chip',hl:true},{l:'Battery',v:'30 hrs ANC',hl:true},{l:'Bluetooth',v:'5.3'},{l:'Weight',v:'250g'},{l:'Codec',v:'LDAC'}],summary:"Sony's sixth-generation flagship wireless headphones set the industry benchmark for adaptive noise cancellation. The QN3 chip processes ANC 8× faster than its predecessor — mid-flight engine roar simply disappears. Sound quality is excellent for a wireless headphone, particularly with LDAC enabled on Android.",pros:['Best-in-class ANC performance','30 hours ANC battery life','LDAC codec for near-lossless wireless','Multipoint Bluetooth for 2 devices','Exceptional 8-mic call quality'],cons:['Not ideal for audiophile-grade listening','No IP rating','Plastic build feels less premium at this price']},
+  5:{scoreBars:[{l:'Sound Quality',v:9.6},{l:'Build Quality',v:9.5},{l:'Preamp',v:9.3},{l:'Versatility',v:9.0},{l:'Value',v:9.1}],verdict:'The SM7 legend, now with an onboard preamp. A studio standard reinvented.',specs:[{section:'Capsule & Polar Pattern',rows:[['Type','Dynamic cardioid'],['Polar Pattern','Cardioid (unidirectional)'],['Frequency Response','50 – 20,000 Hz'],['Sensitivity','-59.0 dBV/Pa'],['Self-Noise','< 6 dB-A']]},{section:'Built-in Preamp',rows:[['Gain Range','0 / +18 / +28 dB switchable'],['Output Impedance','150 Ω'],['EIN','< 6 dB-A at max gain'],['Phantom Power','Yes (for active preamp), 48V']]},{section:'Physical',rows:[['Weight','797g'],['Connector','XLR (3-pin)'],['Shielding','Electromagnetic interference shielding'],['Finish','Flat black'],['Warranty','2 years']]}],overview:[{l:'Type',v:'Dynamic cardioid'},{l:'Onboard Gain',v:'+28 dB max',hl:true},{l:'Freq. Range',v:'50–20 kHz'},{l:'Self-Noise',v:'< 6 dB-A',hl:true},{l:'Output',v:'XLR'},{l:'Weight',v:'797g'}],summary:"The SM7dB is the logical evolution of the most-used vocal microphone in recording history. Shure added a built-in, switchable preamp that provides up to +28 dB of clean gain, solving the primary complaint about the original SM7B: that it needed a powerful, expensive preamp to reach workable levels. The result sounds unmistakably like the SM7 but now works without a Cloudlifter or premium interface.",pros:['Up to +28dB built-in clean gain','Works with almost any interface or mixer','Same legendary SM7 capsule tuning','Exceptional electromagnetic shielding','Industry-standard broadcast sound'],cons:['Requires phantom power for active gain','At 797g, it is a heavy microphone','Not ideal for acoustic instruments']},
+  7:{scoreBars:[{l:'Conversion Quality',v:9.2},{l:'Preamp Quality',v:9.0},{l:'Build',v:9.4},{l:'Software',v:8.6},{l:'Value',v:8.4}],verdict:'The finest 2-channel interface ever made for desktop recording.',specs:[{section:'Inputs',rows:[['Mic/Line Inputs','2 × XLR-1/4" Combo (front)'],['Instrument Input','1 × 1/4" Hi-Z (front)'],['USB Input','Type-C (to host)'],['Optical Input','None']]},{section:'Outputs',rows:[['Monitor Outputs','2 × 1/4" TRS (rear)'],['Headphone Output','1 × 1/4" (front)'],['Digital Output','None']]},{section:'Converters & Performance',rows:[['Sample Rates','44.1, 48, 88.2, 96, 176.4, 192 kHz'],['Bit Depth','Up to 32-bit'],['Dynamic Range','130 dB (DAC out)'],['THD+N','-109 dBu'],['Preamp Gain Range','0 – 75 dB']]},{section:'Physical',rows:[['Connectivity','USB-C (bus-powered)'],['Controls','Stepped encoder + capacitive touch'],['Dimensions','132 × 47 × 26mm'],['Weight','285g'],['Warranty','1 year']]}],overview:[{l:'Inputs',v:'2 × Combo XLR'},{l:'Dynamic Range',v:'130 dB',hl:true},{l:'Sample Rate',v:'Up to 192 kHz',hl:true},{l:'Bit Depth',v:'32-bit'},{l:'Bus Powered',v:'Yes, USB-C'},{l:'Weight',v:'285g'}],summary:"The Apogee Duet 3 is the culmination of decades of Apogee converter expertise in a palm-sized unit. With 130 dB dynamic range and 32-bit capture, it exceeds the technical specifications of interfaces costing two to three times as much. The stepped encoder and haptic touch controls are a joy to use, and the magnetic breakout cable system is elegantly practical.",pros:['130 dB dynamic range — class-leading','32-bit / 192 kHz capture','Beautifully compact aluminium chassis','Stepped encoder with precise feel','Apogee Maestro software is excellent'],cons:['Premium price for 2 channels','No optical I/O','1-year warranty is short at this price']},
+  25:{scoreBars:[{l:'Conversion Quality',v:9.4},{l:'Preamp Quality',v:9.3},{l:'Build',v:9.0},{l:'Software',v:8.8},{l:'Value',v:9.5}],verdict:'Four channels of UA magic in a bus-powered package. The best interface value play in years.',specs:[{section:'Inputs',rows:[['Mic/Line Inputs','4 × XLR-1/4" Combo'],['Instrument Inputs','2 × 1/4" Hi-Z (input 1–2)'],['USB','Type-C bus-powered'],['Optical Input','None']]},{section:'Outputs',rows:[['Monitor Outputs','2 × 1/4" TRS'],['Headphone Outputs','2 × 1/4"'],['Direct Out','2 × 1/4" TRS']]},{section:'Converters & Performance',rows:[['Sample Rates','44.1 – 192 kHz'],['Bit Depth','24-bit'],['Dynamic Range','119 dB'],['Analog Gain Range','0 – 60 dB'],['Onboard Processing','UA 76 compressor, Volt Preamp model']]},{section:'Physical',rows:[['Connectivity','USB-C (bus-powered)'],['Weight','~500g'],['Dimensions','215 × 47 × 170mm'],['Warranty','1 year']]}],overview:[{l:'Inputs',v:'4 × Combo XLR',hl:true},{l:'Dynamic Range',v:'119 dB'},{l:'Sample Rate',v:'Up to 192 kHz',hl:true},{l:'Onboard FX',v:'UA 76 compressor',hl:true},{l:'Bus Powered',v:'Yes, USB-C'},{l:'Headphones',v:'2 × 1/4"'}],summary:"The Volt 476P packs four channels of Universal Audio's 76-style preamp compression into a bus-powered USB-C interface, a combination that simply didn't exist at this price point before. The built-in analog processing gives recordings a character that most interfaces in this price bracket can't replicate without outboard gear. The dual headphone outputs make it genuinely useful in a project studio or mobile rig.",pros:['4-channel recording with bus power only','Built-in UA 76-style analog compression','Dual headphone outputs','Excellent dynamic range at 119 dB','Outstanding value for a UA product'],cons:['24-bit only, no 32-bit float','No optical I/O','Onboard DSP is limited to vintage 76 mode']},
+};
+
+function generateDefaultSpecs(g) {
+  const defaults = {
+    Headphones:{scoreBars:[{l:'Sound Quality',v:+(g.score-0.2).toFixed(1)},{l:'Build Quality',v:+(g.score-0.3).toFixed(1)},{l:'Comfort',v:+(g.score-0.5).toFixed(1)},{l:'Value',v:+(g.score-0.4).toFixed(1)},{l:'Features',v:+(g.score-0.1).toFixed(1)}],verdict:`A ${g.badge==='editors'?'standout':'solid'} headphone from ${g.brand}.`,specs:[{section:'Driver & Transducer',rows:[['Driver Type','Dynamic'],['Frequency Response','20 – 20,000 Hz'],['Impedance','32 Ω'],['Sensitivity','100 dB/mW'],['THD','< 0.1%']]},{section:'Physical',rows:[['Weight','~280g'],['Cup Design','Over-ear'],['Ear Pad Material','Protein leather'],['Cable Length','1.2m + 3m extension'],['Connector','3.5mm TRS (6.35mm adapter included)']]}],overview:[{l:'Type',v:'Dynamic'},{l:'Impedance',v:'32 Ω',hl:true},{l:'Freq.',v:'20–20 kHz'},{l:'Weight',v:'~280g'},{l:'Cable',v:'Detachable'},{l:'Form',v:'Over-ear'}],summary:g.desc+` ${g.brand}'s engineering heritage is evident throughout the build and tuning.`,pros:['Solid sonic performance','Comfortable for extended sessions','Proven brand reliability'],cons:['Limited soundstage vs open-backs','Closed design may build heat']},
+    IEMs:{scoreBars:[{l:'Sound Quality',v:+(g.score-0.1).toFixed(1)},{l:'Build Quality',v:+(g.score-0.2).toFixed(1)},{l:'Fit & Seal',v:+(g.score-0.4).toFixed(1)},{l:'Isolation',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.5).toFixed(1)}],verdict:`Reference-grade in-ear performance from ${g.brand}.`,specs:[{section:'Driver Configuration',rows:[['Driver Type','Balanced Armature / Dynamic hybrid'],['Drivers Per Side','2–5 per configuration'],['Frequency Response','5 – 40,000 Hz'],['Impedance','16 Ω'],['Sensitivity','106 dB/mW']]},{section:'Physical',rows:[['Housing Material','Alloy / medical-grade resin'],['Cable Connector','MMCX or 2-pin 0.78mm'],['Cable Length','1.2m'],['Cable Termination','3.5mm SE + 4.4mm balanced adapter'],['Ear Tip Sizes','XS / S / M / L / XL silicone + foam']]}],overview:[{l:'Driver',v:'BA hybrid',hl:true},{l:'Impedance',v:'16 Ω'},{l:'Freq.',v:'5–40 kHz',hl:true},{l:'Sensitivity',v:'106 dB/mW'},{l:'Cable',v:'Detachable'},{l:'Seal',v:'Passive isolation'}],summary:g.desc+' The in-ear form factor delivers passive isolation that over-ear designs cannot match.',pros:['Exceptional passive noise isolation','Portable and stage-ready','Detachable cable system'],cons:['Fit is personal — may not suit all ears','Requires careful tip selection']},
+    Microphones:{scoreBars:[{l:'Sound Quality',v:+(g.score-0.1).toFixed(1)},{l:'Build',v:+(g.score-0.2).toFixed(1)},{l:'Versatility',v:+(g.score-0.4).toFixed(1)},{l:'Self-Noise',v:+(g.score-0.3).toFixed(1)},{l:'Value',v:+(g.score-0.3).toFixed(1)}],verdict:`Professional-grade capture from ${g.brand}.`,specs:[{section:'Capsule',rows:[['Type','Condenser / Dynamic'],['Polar Pattern','Cardioid'],['Frequency Response','20 – 20,000 Hz'],['Sensitivity','-40 dBV/Pa'],['Self-Noise','< 12 dB-A']]},{section:'Physical & Connectivity',rows:[['Output','XLR / USB'],['Phantom Power','48V (if condenser)'],['Weight','~300g'],['Mount','Shock mount / stand adapter'],['Warranty','2 years']]}],overview:[{l:'Type',v:'Condenser'},{l:'Polar Pattern',v:'Cardioid',hl:true},{l:'Self-Noise',v:'< 12 dB-A',hl:true},{l:'Output',v:'XLR'},{l:'Phantom',v:'48V'},{l:'Weight',v:'~300g'}],summary:g.desc,pros:['Transparent sound reproduction','Industry-standard reliability','Suitable for vocals and instruments'],cons:['May require quality preamp','Cardioid pattern only']},
+    Interfaces:{scoreBars:[{l:'Conversion Quality',v:+(g.score-0.2).toFixed(1)},{l:'Preamp Quality',v:+(g.score-0.3).toFixed(1)},{l:'Build',v:+(g.score-0.4).toFixed(1)},{l:'Software',v:+(g.score-0.4).toFixed(1)},{l:'Value',v:+(g.score-0.1).toFixed(1)}],verdict:`Reliable, clean conversion from ${g.brand}.`,specs:[{section:'Inputs & Outputs',rows:[['Mic Inputs','2 × XLR combo'],['Line Inputs','2 × 1/4"'],['Monitor Outputs','2 × 1/4" TRS'],['Headphone Output','1 × 1/4"'],['USB','Type-C or Type-B']]},{section:'Performance',rows:[['Sample Rates','44.1 – 192 kHz'],['Bit Depth','24-bit'],['Dynamic Range','110 dB'],['Preamp Gain','0 – 60 dB'],['Bus Powered','Yes']]}],overview:[{l:'Mic Inputs',v:'2 × XLR'},{l:'Dynamic Range',v:'110 dB',hl:true},{l:'Sample Rate',v:'Up to 192 kHz',hl:true},{l:'Bit Depth',v:'24-bit'},{l:'Bus Powered',v:'Yes'},{l:'USB',v:'Type-C'}],summary:g.desc,pros:['Clean transparent preamps','Bus-powered for portability','Low-latency driver performance'],cons:['Limited I/O for full studio use','No onboard DSP']},
+    Synths:{scoreBars:[{l:'Sound Engine',v:+(g.score-0.1).toFixed(1)},{l:'Build Quality',v:+(g.score-0.3).toFixed(1)},{l:'Ease of Use',v:+(g.score-0.4).toFixed(1)},{l:'Versatility',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.3).toFixed(1)}],verdict:`Expressive synthesis from ${g.brand}.`,specs:[{section:'Sound Engine',rows:[['Engine Type','Analogue / Digital hybrid'],['Polyphony','8 – 32 voices'],['Oscillators','2–3 per voice'],['Filter','24dB low-pass'],['Envelopes','ADSR × 2 (filter + amp)']]},{section:'Controls & Connectivity',rows:[['Keys','25 or 37 keys'],['MIDI','In / Out / USB'],['Audio Output','Stereo 1/4" line out'],['Headphone','1 × 3.5mm or 1/4"'],['Power','DC 9V adapter']]}],overview:[{l:'Engine',v:'Analogue / hybrid',hl:true},{l:'Polyphony',v:'8–32 voices'},{l:'Filter',v:'24dB LP',hl:true},{l:'MIDI',v:'In / Out / USB'},{l:'Audio Out',v:'Stereo 1/4"'},{l:'Power',v:'DC adapter'}],summary:g.desc,pros:['Immediate hands-on control','Rich analogue character','Full MIDI integration'],cons:['Preset storage can be limited','Learning curve for deep sound design']},
+    Speakers:{scoreBars:[{l:'Low End',v:+(g.score-0.2).toFixed(1)},{l:'Midrange',v:+(g.score-0.1).toFixed(1)},{l:'High End',v:+(g.score-0.3).toFixed(1)},{l:'Imaging',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.4).toFixed(1)}],verdict:`Accurate studio monitoring from ${g.brand}.`,specs:[{section:'Drivers & Power',rows:[['Woofer','5–8 inch woven composite'],['Tweeter','1 inch soft-dome'],['Amplifier','Bi-amplified class AB/D'],['Total Power','60–150W'],['Frequency Response','52 Hz – 30 kHz (±3 dB)']]},{section:'Connectivity',rows:[['Inputs','XLR + 1/4" TRS (balanced)'],['Volume Control','Rear panel encoder'],['Room Correction','Acoustic Space switch'],['Weight','~8–12 kg per unit']]}],overview:[{l:'Woofer',v:'8 inch',hl:true},{l:'Tweeter',v:'1 inch soft-dome'},{l:'Power',v:'150W bi-amped',hl:true},{l:'Freq.',v:'52 Hz – 30 kHz'},{l:'Input',v:'Balanced XLR'},{l:'Room EQ',v:'Yes'}],summary:g.desc,pros:['Accurate flat frequency response','Balanced XLR connectivity','Built-in room correction switches'],cons:['Requires calibration in your room','Bi-amplified design adds weight']},
+  };
+  return defaults[g.cat] || defaults.Headphones;
+}
+
+function getSpecs(g) {
+  // 1. Try specsData from Strapi (already parsed object or JSON string)
+  if (g.specsData) {
+    try {
+      var parsed = typeof g.specsData === 'string' ? JSON.parse(g.specsData) : g.specsData;
+      // Must have at least specs array to be valid
+      if (parsed && parsed.specs && parsed.specs.length) return parsed;
+    } catch(e) {
+      console.warn('[Soundb] specsData parse error for', g.name, e);
+    }
+  }
+  // 2. Fall back to hardcoded SPECS_DB (legacy per-ID overrides)
+  if (SPECS_DB[g.id]) return SPECS_DB[g.id];
+  // 3. Last resort: category defaults
+  return generateDefaultSpecs(g);
+}
+
+function productSVG(g) {
+  if (g.id === 25) {
+    return `<svg width="100%" height="100%" viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg"><rect width="420" height="340" fill="#060a10"/><defs><radialGradient id="vgs" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00c2ff" stop-opacity="0.12"/><stop offset="100%" stop-color="#060a10" stop-opacity="0"/></radialGradient><linearGradient id="vbs" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1a2535"/><stop offset="100%" stop-color="#0d1825"/></linearGradient></defs><rect width="420" height="340" fill="url(#vgs)"/><rect x="40" y="60" width="340" height="200" rx="10" fill="url(#vbs)" stroke="#1e3a5a" stroke-width="1.5"/><rect x="55" y="80" width="170" height="108" rx="4" fill="#040c14" stroke="#0a2a40" stroke-width="0.7"/><polyline points="63,134 82,100 103,140 124,82 145,115 166,95 188,128 205,112 218,134" fill="none" stroke="#00c2ff" stroke-width="1.8" opacity="0.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="272" cy="106" r="22" fill="#0d1825" stroke="#1e3a5a" stroke-width="1"/><circle cx="272" cy="106" r="10" fill="#0a1520"/><circle cx="268" cy="90" r="3" fill="#00c2ff" opacity="0.9"/><circle cx="318" cy="106" r="22" fill="#0d1825" stroke="#1e3a5a" stroke-width="1"/><circle cx="318" cy="106" r="10" fill="#0a1520"/><circle cx="314" cy="90" r="3" fill="#00c2ff" opacity="0.9"/><rect x="255" y="158" width="8" height="58" rx="3" fill="#0d1825" stroke="#1e3a5a"/><rect x="252" y="183" width="14" height="10" rx="1.5" fill="#00c2ff" opacity="0.85"/><rect x="273" y="158" width="8" height="58" rx="3" fill="#0d1825" stroke="#1e3a5a"/><rect x="270" y="197" width="14" height="10" rx="1.5" fill="#00c2ff" opacity="0.5"/><rect x="291" y="158" width="8" height="58" rx="3" fill="#0d1825" stroke="#1e3a5a"/><rect x="288" y="170" width="14" height="10" rx="1.5" fill="#00c2ff" opacity="0.7"/><rect x="309" y="158" width="8" height="58" rx="3" fill="#0d1825" stroke="#1e3a5a"/><rect x="306" y="192" width="14" height="10" rx="1.5" fill="#00c2ff" opacity="0.6"/><circle cx="362" cy="188" r="8" fill="#00c2ff" opacity="0.5"/><text x="210" y="294" text-anchor="middle" font-family="monospace" font-size="11" fill="#00c2ff" opacity="0.4" letter-spacing="4">UNIVERSAL AUDIO</text></svg>`;
+  }
+  return `<svg width="100%" height="100%" viewBox="0 0 420 340" xmlns="http://www.w3.org/2000/svg"><rect width="420" height="340" fill="${g.color1}"/><defs><radialGradient id="rg${g.id}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${g.color2}" stop-opacity="0.18"/><stop offset="100%" stop-color="${g.color1}" stop-opacity="0"/></radialGradient></defs><rect width="420" height="340" fill="url(#rg${g.id})"/><circle cx="210" cy="165" r="105" fill="none" stroke="${g.color2}" stroke-width="0.8" opacity="0.25"/><circle cx="210" cy="165" r="72" fill="none" stroke="${g.color2}" stroke-width="0.6" opacity="0.2"/><circle cx="210" cy="165" r="44" fill="none" stroke="${g.color2}" stroke-width="0.7" opacity="0.3"/><circle cx="210" cy="165" r="20" fill="${g.color2}" opacity="0.18"/><circle cx="210" cy="165" r="7" fill="${g.color2}" opacity="0.85"/><text x="210" y="306" text-anchor="middle" font-family="monospace" font-size="12" fill="${g.color2}" opacity="0.45" letter-spacing="4">${g.brand.toUpperCase()}</text></svg>`;
+}
+
+function formatPrice(p) { return '₹' + p.toLocaleString('en-IN'); }
+
+function calcScore(scoreBars) {
+  // Average of all individual score bar values, rounded to 1 decimal
+  if (!scoreBars || !scoreBars.length) return null;
+  var sum = scoreBars.reduce(function(acc, b) { return acc + Number(b.v); }, 0);
+  return Math.round((sum / scoreBars.length) * 10) / 10;
+}
+
+function loadProduct(g) {
+  const data = getSpecs(g);
+
+  // Compute score from scoreBars average if available, else fall back to g.score
+  var computedScore = (data.scoreBars && data.scoreBars.length)
+    ? calcScore(data.scoreBars)
+    : g.score;
+
+  document.title = `${g.name} Specs — Soundb`;
+  document.getElementById('bc-cat').textContent = g.cat;
+  document.getElementById('bc-name').textContent = g.name;
+  const frame = document.getElementById('product-visual-frame');
+  frame.innerHTML = productSVG(g) + (g.badge ? `<div class="product-visual-badge badge-${g.badge}">${g.badge==='editors'?"Editor's Choice":g.badge==='new'?'New':'Budget Pick'}</div>` : '');
+  document.getElementById('info-eyebrow').textContent = `${g.cat} · ${g.brand}`;
+  document.getElementById('info-name').textContent = g.name;
+  document.getElementById('info-brand').textContent = `By ${g.brand}`;
+  document.getElementById('info-price').textContent = formatPrice(g.price);
+  document.getElementById('info-score').textContent = computedScore !== null ? computedScore : g.score;
+  document.getElementById('info-cat-badge').textContent = g.cat;
+  document.getElementById('verdict-text').textContent = data.verdict;
+  const reviewBtn = document.getElementById('btn-review');
+  if (g.reviewed) { reviewBtn.onclick = () => location.href='soundb-review.html?id='+g.id; }
+  else { reviewBtn.textContent = 'Review Coming Soon'; reviewBtn.classList.add('disabled'); reviewBtn.onclick = null; }
+  document.getElementById('score-bars').innerHTML = data.scoreBars.map(b => `<div class="score-bar-row"><div class="score-bar-label">${b.l}</div><div class="score-bar-track"><div class="score-bar-fill" data-w="${b.v*10}"></div></div><div class="score-bar-val">${b.v}</div></div>`).join('');
+  // Use specssections (structured) for specs page, fall back to flat specs
+  var specsSections = g.specssections || data.specs || [];
+  document.getElementById('specs-content').innerHTML = specsSections.map(function(sec) {
+    var rows = (sec.rows || []).map(function(row) {
+      var k, v;
+      if (Array.isArray(row)) { k = row[0]; v = row[1]; }
+      else { k = row.key || row.l || row.name || ''; v = row.value || row.v || row.val || ''; }
+      return '<tr><td>' + (k||'') + '</td><td>' + (v||'') + '</td></tr>';
+    }).join('');
+    return '<div class="specs-section"><div class="specs-section-title">' + sec.section + '</div><table class="specs-table">' + rows + '</table></div>';
+  }).join('');
+  document.getElementById('overview-grid').innerHTML = data.overview.map(o => `<div class="overview-card${o.hl?' highlight':''}"><div class="overview-card-label">${o.l}</div><div class="overview-card-value">${o.v}</div></div>`).join('');
+  document.getElementById('overview-summary').textContent = data.summary;
+  document.getElementById('pros-list').innerHTML = data.pros.map(p=>`<div class="pros-cons-item"><span class="pros-cons-icon pro">✓</span><span>${p}</span></div>`).join('');
+  document.getElementById('cons-list').innerHTML = data.cons.map(c=>`<div class="pros-cons-item"><span class="pros-cons-icon con">✕</span><span>${c}</span></div>`).join('');
+  const related = GEAR.filter(x => x.id!==g.id && x.cat===g.cat).slice(0,3);
+  document.getElementById('related-grid').innerHTML = related.length ? related.map(r=>`<div class="related-card" onclick="loadById(${r.id})"><div class="related-card-cat">${r.cat}</div><div class="related-card-name">${r.name}</div><div class="related-card-brand">${r.brand}</div><div class="related-card-footer"><div class="related-card-price">${formatPrice(r.price)}</div><div class="related-score">${r.score}<span style="font-size:11px;color:var(--muted)">/10</span></div></div></div>`).join('') : '<div style="padding:32px;color:var(--muted);font-family:var(--font-mono);font-size:12px;text-align:center;grid-column:1/-1">No related products.</div>';
+  setTimeout(() => { document.querySelectorAll('.score-bar-fill').forEach(el => { el.style.width = el.dataset.w + '%'; }); }, 120);
+  window.history.replaceState({}, '', `soundb-specs.html?id=${g.id}`);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function loadById(id) {
+  const g = GEAR.find(x => String(x.id) === String(id) || x.id === id);
+  if (g) { document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab==='specs')); document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='tab-specs')); loadProduct(g); }
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+const params = new URLSearchParams(window.location.search);
+var gIdRaw = params.get('id');
+// Fallback: npx serve strips query strings
+if (!gIdRaw) {
+  gIdRaw = localStorage.getItem('soundb_spec_id');
+}
+localStorage.removeItem('soundb_spec_id');
+var gIdNum = gIdRaw !== null ? Number(gIdRaw) : NaN;
+CMS.getGear(GEAR).then(function(data) {
+  GEAR = data;
+  var g = null;
+  if (gIdRaw !== null) {
+    g = GEAR.find(function(x) { return String(x.id) === String(gIdRaw) || (!isNaN(gIdNum) && x.id === gIdNum); });
+  }
+  if (!g && GEAR.length) {
+    // id not found — show message instead of silently loading wrong product
+    console.warn('[Specs] Product id', gIdRaw, 'not found in CMS. Available ids:', GEAR.map(function(x){ return x.id; }));
+    document.querySelector('.breadcrumb') && (document.querySelector('.breadcrumb').textContent = 'Product not found — check the URL');
+    return;
+  }
+  if (g) loadProduct(g);
+});
+</script>
+</body>
+</html>

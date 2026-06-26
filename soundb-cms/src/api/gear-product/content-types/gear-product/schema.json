@@ -1,0 +1,124 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gear_products",
+  "info": {
+    "singularName": "gear-product",
+    "pluralName": "gear-products",
+    "displayName": "GearProducts"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "brand": {
+      "type": "string",
+      "required": true
+    },
+    "price": {
+      "type": "biginteger"
+    },
+    "score": {
+      "type": "decimal"
+    },
+    "reviewed": {
+      "type": "boolean",
+      "required": true
+    },
+    "isNew": {
+      "type": "boolean",
+      "default": false
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Headphones",
+        "Preamps",
+        "IEMs",
+        "Interfaces",
+        "Microphones",
+        "Synths",
+        "Speakers"
+      ]
+    },
+    "badge": {
+      "type": "enumeration",
+      "enum": [
+        "editors",
+        "new",
+        "budget"
+      ]
+    },
+    "desc": {
+      "type": "text"
+    },
+    "color1": {
+      "type": "string"
+    },
+    "color2": {
+      "type": "string"
+    },
+    "specsData": {
+      "type": "json"
+    },
+    "headline": {
+      "type": "string"
+    },
+    "deck": {
+      "type": "text"
+    },
+    "intro": {
+      "type": "json"
+    },
+    "sound": {
+      "type": "json"
+    },
+    "pullquote": {
+      "type": "json"
+    },
+    "build": {
+      "type": "text"
+    },
+    "comparesIntro": {
+      "type": "text"
+    },
+    "comparisonHeaders": {
+      "type": "json"
+    },
+    "comparisonRows": {
+      "type": "json"
+    },
+    "verdict": {
+      "type": "text"
+    },
+    "verdictLabel": {
+      "type": "string"
+    },
+    "author": {
+      "type": "string"
+    },
+    "authorRole": {
+      "type": "string"
+    },
+    "readTime": {
+      "type": "string"
+    },
+    "tested": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "json"
+    },
+    "justLaunched": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

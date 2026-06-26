@@ -1,0 +1,446 @@
+<!-- cat > /mnt/user-data/outputs/index.html << 'HTMLEOF' -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Soundb — Audio Technology & Music World</title>
+
+
+</head>
+<body>
+
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-main" id="hero-main" onclick="window.location='soundb-news.html'">
+        <div class="hero-main-img-placeholder" id="hero-cover">
+          <svg width="100%" height="520" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <radialGradient id="g1" cx="40%" cy="50%" r="60%"><stop offset="0%" stop-color="#FF8C00" stop-opacity="0.3"/><stop offset="100%" stop-color="#1a0a2e" stop-opacity="0"/></radialGradient>
+              <radialGradient id="g2" cx="70%" cy="40%" r="50%"><stop offset="0%" stop-color="#3060FF" stop-opacity="0.2"/><stop offset="100%" stop-color="#0d1a2e" stop-opacity="0"/></radialGradient>
+            </defs>
+            <rect width="800" height="520" fill="#0d0a1a"/>
+            <rect width="800" height="520" fill="url(#g1)"/><rect width="800" height="520" fill="url(#g2)"/>
+            <g opacity="0.5">
+              <rect x="60" y="220" width="6" height="80" rx="3" fill="#FF8C00" opacity="0.7"/><rect x="74" y="190" width="6" height="140" rx="3" fill="#FF8C00" opacity="0.6"/><rect x="88" y="210" width="6" height="100" rx="3" fill="#FF8C00" opacity="0.8"/><rect x="102" y="175" width="6" height="170" rx="3" fill="#FF8C00" opacity="0.5"/><rect x="116" y="200" width="6" height="120" rx="3" fill="#FF8C00" opacity="0.7"/><rect x="130" y="180" width="6" height="160" rx="3" fill="#FF8C00" opacity="0.9"/><rect x="144" y="215" width="6" height="90" rx="3" fill="#FF8C00" opacity="0.6"/>
+            </g>
+            <circle cx="550" cy="240" r="180" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.3"/>
+            <circle cx="550" cy="240" r="130" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.2"/>
+            <circle cx="550" cy="240" r="80" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.3"/>
+            <circle cx="550" cy="240" r="20" fill="#FF8C00" opacity="0.4"/>
+            <circle cx="550" cy="240" r="8" fill="#FF8C00" opacity="0.8"/>
+          </svg>
+        </div>
+        <div class="hero-main-body">
+          <div class="hero-eyebrow" id="hero-eyebrow"></div>
+          <h1 class="hero-title" id="hero-title"></h1>
+          <div class="hero-meta" id="hero-meta"></div>
+        </div>
+      </div>
+      <aside class="hero-sidebar">
+        <div class="hero-sidebar-label">Also today</div>
+        <div class="hero-side-item" id="hero-side-1" onclick="window.location='soundb-news.html'">
+          <div><div class="side-eyebrow" id="hero-side-1-cat"></div><div class="side-title" id="hero-side-1-title"></div></div>
+          <div class="side-meta" id="hero-side-1-meta"></div>
+        </div>
+        <div class="hero-side-item" id="hero-side-2" onclick="window.location='soundb-news.html'">
+          <div><div class="side-eyebrow" id="hero-side-2-cat"></div><div class="side-title" id="hero-side-2-title"></div></div>
+          <div class="side-meta" id="hero-side-2-meta"></div>
+        </div>
+        <!-- AD SPACE -->
+        <div class="hero-ad-slot">
+          <div class="hero-ad-label">Advertisement</div>
+          <div class="hero-ad-inner">
+            <svg width="100%" height="90" viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg">
+              <rect width="300" height="90" fill="#0e0c18"/>
+              <rect x="0" y="0" width="4" height="90" fill="#7B5CF5"/>
+              <circle cx="44" cy="45" r="22" fill="#1a1630" stroke="#7B5CF5" stroke-width="0.8" opacity="0.8"/>
+              <circle cx="44" cy="45" r="10" fill="#7B5CF5" opacity="0.5"/>
+              <circle cx="44" cy="45" r="4" fill="#7B5CF5"/>
+              <text x="78" y="34" font-family="'Barlow Condensed',sans-serif" font-size="11" font-weight="700" fill="#9b8aff" letter-spacing="2" text-transform="uppercase">IZOTOPE</text>
+              <text x="78" y="52" font-family="'Barlow Condensed',sans-serif" font-size="16" font-weight="900" fill="#F0EDE6">Ozone 11 is here.</text>
+              <text x="78" y="67" font-family="'Barlow',sans-serif" font-size="10" fill="#8A8880">AI mastering, reimagined.</text>
+              <rect x="78" y="73" width="68" height="11" rx="2" fill="#7B5CF5"/>
+              <text x="112" y="82" font-family="'Barlow',sans-serif" font-size="9" font-weight="700" fill="#fff" text-anchor="middle">TRY FREE →</text>
+            </svg>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- NEW RELEASE STRIP -->
+<section class="new-release-strip">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:20px">
+      <span class="section-title">New Release</span>
+      <a href="soundb-music.html" class="section-link">All new music →</a>
+    </div>
+    <div class="release-card" id="new-release-card"><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:24px 0">Loading…</div></div>
+  </div>
+</section>
+
+<!-- REVIEW STRIP -->
+<section class="review-strip">
+  <div class="container">
+    <div class="section-header"><span class="section-title">Latest Reviews</span><a href="soundb-reviews.html" class="section-link">All reviews →</a></div>
+    <div class="review-row" id="review-strip-row"></div>
+  </div>
+</section>
+
+<!-- GEAR LAUNCH -->
+<section class="gear-launch-strip">
+  <div class="container">
+    <div class="section-header" style="margin-bottom:20px">
+      <span class="section-title">Gear Launch</span>
+      <a href="soundb-gear.html" class="section-link">All gear →</a>
+    </div>
+    <div class="gear-launch-card" id="gear-launch-card"><div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);padding:24px 0">Loading…</div></div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div class="container">
+    <div class="content-layout">
+      <div>
+        <div class="section-header"><span class="section-title">Latest Stories</span><a href="soundb-news.html" class="section-link">Archive →</a></div>
+        <div class="card-grid" id="latest-stories-grid"></div>
+      </div>
+      <aside class="sidebar">
+        <div class="newsletter-widget">
+          <h3>Sound<span>b</span><br>Daily Brief</h3>
+          <p>The most important stories in audio & music, delivered every morning before 9 AM.</p>
+          <input class="newsletter-input" type="email" placeholder="Your email address">
+          <button class="newsletter-btn">Get the brief</button>
+        </div>
+        <div>
+          <div class="section-header"><span class="section-title">Trending</span></div>
+          <div class="sidebar-list" id="sidebar-trending"></div>
+        </div>
+        <div>
+          <div class="section-header"><span class="section-title">Topics</span></div>
+          <div class="tag-cloud" id="topics-cloud"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>
+
+
+<script>
+var CAT_LABELS = {
+  industry: 'Industry News',
+  technology: 'Technology',
+  events: 'Events & Shows',
+  breaking: 'Breaking',
+  analysis: 'Analysis',
+  opinion: 'Opinion',
+  artists: 'Artists'
+};
+
+function goToArticle(id) {
+  localStorage.setItem('soundb_article_id', String(id));
+  window.location.href = 'soundb-article?id=' + id;
+}
+
+function artSVG(color, w, h) {
+  var c = color || '#0a0d1a';
+  var id = 'hg' + Math.random().toString(36).slice(2,6);
+  return '<svg width="100%" height="100%" viewBox="0 0 '+(w||400)+' '+(h||220)+'" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">'
+    + '<defs><radialGradient id="'+id+'" cx="30%" cy="50%" r="65%">'
+    + '<stop offset="0%" stop-color="#FF8C00" stop-opacity="0.25"/>'
+    + '<stop offset="100%" stop-color="'+c+'" stop-opacity="0"/>'
+    + '</radialGradient></defs>'
+    + '<rect width="100%" height="100%" fill="'+c+'"/>'
+    + '<rect width="100%" height="100%" fill="url(#'+id+')"/>'
+    + '<circle cx="70%" cy="50%" r="22%" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.2"/>'
+    + '<circle cx="70%" cy="50%" r="10%" fill="#FF8C00" opacity="0.08"/>'
+    + '<circle cx="70%" cy="50%" r="3%" fill="#FF8C00" opacity="0.5"/>'
+    + '</svg>';
+}
+
+function renderHero(articles) {
+  // Homepage hero: coverStory:true first, then featured:true, then first article
+  var hero = articles.find(function(a){ return a.coverStory; })
+    || articles.find(function(a){ return a.featured; })
+    || articles[0];
+  if (!hero) return;
+
+  var heroMain = document.getElementById('hero-main');
+  if (heroMain) {
+    heroMain.onclick = function() { goToArticle(hero.id); };
+    var heroCover = document.getElementById('hero-cover');
+    if (heroCover) heroCover.innerHTML = artSVG(hero.color, 800, 520);
+  }
+
+  var eyebrow = document.getElementById('hero-eyebrow');
+  if (eyebrow) eyebrow.textContent = hero.coverStory ? 'Cover Story' : (hero.label || CAT_LABELS[hero.cat] || 'Featured');
+
+  var titleEl = document.getElementById('hero-title');
+  if (titleEl) titleEl.textContent = hero.title;
+
+  var metaEl = document.getElementById('hero-meta');
+  if (metaEl) metaEl.innerHTML = '<span>' + (hero.author||'') + '</span>'
+    + '<span class="hero-meta-dot"></span>'
+    + '<span>' + (hero.date||'') + '</span>'
+    + '<span class="hero-meta-dot"></span>'
+    + '<span>' + (hero.read||hero.readTime||'') + ' read</span>';
+
+  var rest = articles.filter(function(a){ return a.id !== hero.id; });
+  [0,1].forEach(function(i) {
+    var a = rest[i];
+    if (!a) return;
+    var el  = document.getElementById('hero-side-'+(i+1));
+    var cat = document.getElementById('hero-side-'+(i+1)+'-cat');
+    var tit = document.getElementById('hero-side-'+(i+1)+'-title');
+    var met = document.getElementById('hero-side-'+(i+1)+'-meta');
+    if (el)  el.onclick = function(){ goToArticle(a.id); };
+    if (cat) cat.textContent = a.label || CAT_LABELS[a.cat] || a.cat || '';
+    if (tit) tit.textContent = a.title;
+    if (met) met.textContent = (a.author||'') + ' - ' + (a.read||a.readTime||'');
+  });
+
+  if (window.setSoundbFeatured) window.setSoundbFeatured(hero);
+}
+
+function renderLatestStories(articles) {
+  var grid = document.getElementById('latest-stories-grid');
+  if (!grid || !articles.length) return;
+  var first = articles[0];
+  var rest  = articles.slice(1, 5);
+  grid.innerHTML =
+    '<div class="card card-wide" onclick="goToArticle('+first.id+')">'
+    + '<div class="card-img">' + artSVG(first.color, 400, 220) + '</div>'
+    + '<div class="card-body" style="padding:28px">'
+    + '<div class="card-cat">' + (first.label||CAT_LABELS[first.cat]||first.cat||'') + '</div>'
+    + '<div class="card-title" style="font-size:30px">' + first.title + '</div>'
+    + '<div class="card-excerpt">' + (first.excerpt||'') + '</div>'
+    + '<div class="card-meta"><span>' + (first.author||'') + '</span><span> - </span><span>' + (first.date||'') + '</span></div>'
+    + '</div></div>'
+    + rest.map(function(a) {
+      return '<div class="card" onclick="goToArticle('+a.id+')">'
+        + '<div class="card-img">' + artSVG(a.color, 300, 180) + '</div>'
+        + '<div class="card-cat">' + (a.label||CAT_LABELS[a.cat]||a.cat||'') + '</div>'
+        + '<div class="card-title">' + a.title + '</div>'
+        + '<div class="card-excerpt">' + (a.excerpt||'') + '</div>'
+        + '<div class="card-meta"><span>' + (a.author||'') + '</span><span> - </span><span>' + (a.date||'') + '</span></div>'
+        + '</div>';
+    }).join('');
+}
+
+function renderSidebarTrending(articles) {
+  var list = document.getElementById('sidebar-trending');
+  if (!list) return;
+  list.innerHTML = articles.slice(0,5).map(function(a, i) {
+    return '<div class="sidebar-item" onclick="goToArticle('+a.id+')">'
+      + '<span class="sidebar-num">0'+(i+1)+'</span>'
+      + '<div><div class="sidebar-item-title">'+a.title+'</div>'
+      + '<div class="sidebar-item-meta">'+(a.read||a.readTime||'')+' read</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.querySelector('.newsletter-btn');
+  var inp = document.querySelector('.newsletter-input');
+  if (btn && inp) {
+    btn.addEventListener('click', function() {
+      if (!inp.value.trim() || !inp.value.includes('@')) {
+        inp.style.borderColor = 'var(--red)';
+        return;
+      }
+      inp.style.borderColor = '';
+      btn.textContent = 'Subscribed!';
+      setTimeout(function() { btn.textContent = 'Get the brief'; inp.value = ''; }, 3000);
+    });
+  }
+});
+
+/* ── Articles: hero, latest stories, trending, topics ── */
+CMS.getArticles([]).then(function(articles) {
+  if (!articles.length) return;
+  console.log('[Home] Articles loaded:', articles.length);
+  renderHero(articles);
+
+  // Latest Stories — exclude hero article
+  var hero = articles.find(function(a){ return a.coverStory; })
+    || articles.find(function(a){ return a.featured; })
+    || articles[0];
+  var nonHero = articles.filter(function(a){ return a.id !== hero.id; });
+  console.log('[Home] nonHero articles:', nonHero.length);
+  if (nonHero.length) renderLatestStories(nonHero);
+
+  // Trending — sorted by popular desc, fallback to date order
+  var byPop = articles.slice().sort(function(a,b){ return (b.popular||0)-(a.popular||0); });
+  renderSidebarTrending(byPop);
+
+  // Topics from article tags
+  var cloud = document.getElementById('topics-cloud');
+  if (cloud) {
+    var tagCount = {};
+    articles.forEach(function(a) {
+      (Array.isArray(a.tags) ? a.tags : []).forEach(function(t) {
+        if (t && typeof t === 'string') tagCount[t] = (tagCount[t]||0)+1;
+      });
+    });
+    var topTags = Object.keys(tagCount).sort(function(a,b){ return tagCount[b]-tagCount[a]; }).slice(0,12);
+    if (!topTags.length) {
+      topTags = articles.map(function(a){ return a.cat; }).filter(Boolean)
+        .filter(function(v,i,arr){ return arr.indexOf(v)===i; })
+        .map(function(c){ return c.charAt(0).toUpperCase()+c.slice(1); });
+    }
+    cloud.innerHTML = topTags.map(function(t) {
+      var slug = t.toLowerCase();
+      var onclick = 'localStorage.setItem(&quot;soundb_cat&quot;,&quot;' + slug + '&quot;);location.href=&quot;soundb-news.html?cat=' + slug + '&quot;';
+      return '<span class="tag" style="cursor:pointer" onclick="' + onclick + '">' + t + '</span>';
+    }).join('');
+  }
+});
+
+/* ── Gear: review strip + gear launch + new release ── */
+CMS.getGear([]).then(function(gear) {
+
+  // Latest Reviews strip
+  var row = document.getElementById('review-strip-row');
+  if (row) {
+    var reviewed = gear.filter(function(g){ return g.reviewed; }).sort(function(a,b){ return b.id-a.id; }).slice(0,4);
+    row.innerHTML = reviewed.map(function(g) {
+      var uid = 'rs'+Math.random().toString(36).slice(2,6);
+      var c1 = g.color1||'#1A1A1F', c2 = g.color2||'#FF8C00';
+      return '<div class="review-card" data-id="'+g.id+'" style="cursor:pointer">'
+        +'<div class="review-img"><svg viewBox="0 0 200 120" width="100%" height="100%">'
+        +'<rect width="200" height="120" fill="'+c1+'"/>'
+        +'<defs><radialGradient id="'+uid+'" cx="50%" cy="50%" r="55%">'
+        +'<stop offset="0%" stop-color="'+c2+'" stop-opacity="0.25"/>'
+        +'<stop offset="100%" stop-color="'+c1+'" stop-opacity="0"/>'
+        +'</radialGradient></defs>'
+        +'<rect width="200" height="120" fill="url(#'+uid+')"/>'
+        +'<circle cx="100" cy="60" r="30" fill="none" stroke="'+c2+'" stroke-width="0.8" opacity="0.4"/>'
+        +'<circle cx="100" cy="60" r="8" fill="'+c2+'" opacity="0.6"/>'
+        +'</svg></div>'
+        +'<div class="review-score"><span class="review-score-num">'+(g.score||'—')+'</span><span class="review-score-max">/10</span></div>'
+        +'<div class="review-name">'+g.name+'</div>'
+        +'<div class="review-brand">'+(g.subcat||g.cat||g.brand)+'</div>'
+        +'</div>';
+    }).join('');
+    row.querySelectorAll('.review-card[data-id]').forEach(function(el) {
+      el.addEventListener('click', function() {
+        localStorage.setItem('soundb_review_id', el.dataset.id);
+        location.href = 'soundb-review.html?id=' + el.dataset.id;
+      });
+    });
+  }
+
+  // Gear Launch — newest isNew product
+  var launchCard = document.getElementById('gear-launch-card');
+  if (launchCard) {
+    var latest = gear.filter(function(g){ return g.justLaunched; }).sort(function(a,b){ return b.id-a.id; })[0];
+    if (latest) {
+      var sd = latest.specsData || {};
+      var overviewRows = (sd.overview || []).slice(0,4);
+      var specsHTML = overviewRows.map(function(o) {
+        return '<div class="gear-spec"><span class="gear-spec-label">'+o.l+'</span><span class="gear-spec-val">'+o.v+'</span></div>';
+      }).join('');
+      var c1 = latest.color1||'#0a0a1a', c2 = latest.color2||'#FF8C00';
+      launchCard.innerHTML =
+        '<div class="gear-launch-visual">'
+        +'<div class="gear-launch-badge-new">JUST LAUNCHED</div>'
+        +'<svg width="100%" height="100%" viewBox="0 0 340 240" xmlns="http://www.w3.org/2000/svg">'
+        +'<rect width="340" height="240" fill="'+c1+'"/>'
+        +'<defs><radialGradient id="glg" cx="50%" cy="50%" r="55%">'
+        +'<stop offset="0%" stop-color="'+c2+'" stop-opacity="0.18"/>'
+        +'<stop offset="100%" stop-color="'+c1+'" stop-opacity="0"/>'
+        +'</radialGradient></defs>'
+        +'<rect width="340" height="240" fill="url(#glg)"/>'
+        +'<circle cx="170" cy="120" r="80" fill="none" stroke="'+c2+'" stroke-width="0.8" opacity="0.3"/>'
+        +'<circle cx="170" cy="120" r="50" fill="none" stroke="'+c2+'" stroke-width="0.6" opacity="0.2"/>'
+        +'<circle cx="170" cy="120" r="20" fill="'+c2+'" opacity="0.2"/>'
+        +'<circle cx="170" cy="120" r="7" fill="'+c2+'" opacity="0.8"/>'
+        +'</svg></div>'
+        +'<div class="gear-launch-body">'
+        +'<div class="gear-launch-eyebrow"><svg width="7" height="7" viewBox="0 0 7 7"><rect width="7" height="7" fill="#FF8C00"/></svg> Gear Launch · '+latest.cat+'</div>'
+        +'<h2 class="gear-launch-name">'+latest.brand+' '+latest.name+'</h2>'
+        +'<div class="gear-launch-tagline">'+latest.desc+'</div>'
+        +(specsHTML ? '<div class="gear-launch-specs">'+specsHTML+'</div>' : '')
+        +'<div class="gear-launch-footer">'
+        +'<div class="gear-launch-price"><span class="gear-price-amount">&#8377;'+Number(latest.price).toLocaleString('en-IN')+'</span><span class="gear-price-note">MRP incl. GST</span></div>'
+        +'<div class="gear-launch-actions" id="gear-launch-btns"></div>'
+        +'</div></div></div>';
+      var btns = document.getElementById('gear-launch-btns');
+      if (btns) {
+        var specsBtn = document.createElement('button');
+        specsBtn.className = 'release-btn release-btn-primary';
+        specsBtn.textContent = 'See Full Specs →';
+        specsBtn.addEventListener('click', function() {
+          localStorage.setItem('soundb_spec_id', String(latest.id));
+          location.href = 'soundb-specs.html?id=' + latest.id;
+        });
+        btns.appendChild(specsBtn);
+        if (latest.reviewed) {
+          var revBtn = document.createElement('button');
+          revBtn.className = 'release-btn release-btn-secondary';
+          revBtn.textContent = 'Read Review';
+          revBtn.addEventListener('click', function() {
+            localStorage.setItem('soundb_review_id', String(latest.id));
+            location.href = 'soundb-review.html?id=' + latest.id;
+          });
+          btns.appendChild(revBtn);
+        }
+      }
+    }
+  }
+});
+
+CMS.getMusicReviews([]).then(function(reviews) {
+  var card = document.getElementById('new-release-card');
+  if (!card || !reviews.length) return;
+  var r = reviews[0];
+  var uid = 'nr'+Math.random().toString(36).slice(2,6);
+  card.innerHTML =
+    '<div class="release-art">'
+    +'<svg width="100%" height="100%" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">'
+    +'<rect width="120" height="120" fill="'+(r.c1||'#0a0a14')+'"/>'
+    +'<defs><radialGradient id="'+uid+'" cx="50%" cy="50%" r="50%">'
+    +'<stop offset="0%" stop-color="'+(r.c2||'#c026d3')+'" stop-opacity="0.6"/>'
+    +'<stop offset="100%" stop-color="'+(r.c1||'#0a0a14')+'" stop-opacity="0"/>'
+    +'</radialGradient></defs>'
+    +'<rect width="120" height="120" fill="url(#'+uid+')"/>'
+    +'<circle cx="60" cy="60" r="38" fill="none" stroke="'+(r.c2||'#c026d3')+'" stroke-width="0.6" opacity="0.8"/>'
+    +'<circle cx="60" cy="60" r="24" fill="none" stroke="'+(r.c2||'#c026d3')+'" stroke-width="0.4" opacity="0.6"/>'
+    +'<circle cx="60" cy="60" r="8" fill="'+(r.c2||'#c026d3')+'" opacity="0.9"/>'
+    +'<circle cx="60" cy="60" r="3" fill="#fff"/>'
+    +'</svg></div>'
+    +'<div class="release-body">'
+    +'<div class="release-badge"><svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4" fill="'+(r.c2||'#c026d3')+'"/></svg> New Release</div>'
+    +'<div class="release-artist">'+r.artist+'</div>'
+    +'<div class="release-title">"'+r.album+'"</div>'
+    +'<div class="release-meta">'+r.genre+'</div>'
+    +'<p class="release-desc">'+r.summary+'</p>'
+    +'<div class="release-actions">'
+    +(r.sp ? '<a href="'+r.sp+'" target="_blank" class="release-btn release-btn-primary">▶ Play on Spotify</a>' : '')
+    +(r.yt ? '<a href="'+r.yt+'" target="_blank" class="release-btn release-btn-secondary">Watch on YouTube →</a>' : '')
+    +'</div></div>'
+    +'<div class="release-score-panel">'
+    +'<div class="release-score-label">Soundb Score</div>'
+    +'<div class="release-score-num">'+r.score+'</div>'
+    +'<div class="release-score-max">/10</div>'
+    +'<div class="release-platforms">'
+    +(r.sp ? '<span class="release-platform-dot" title="Spotify" style="background:#1DB954"></span>' : '')
+    +(r.am ? '<span class="release-platform-dot" title="Apple Music" style="background:#fc3c44"></span>' : '')
+    +(r.yt ? '<span class="release-platform-dot" title="YouTube" style="background:#FF0000"></span>' : '')
+    +'</div>'
+    +'<div class="release-platform-label">Available on all platforms</div>'
+    +'</div>';
+});
+</script>
+</body>
+</html>

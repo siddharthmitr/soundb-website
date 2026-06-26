@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News — Soundb</title>
+<style>
+/* ── PAGE HERO ── */
+.news-hero { padding: 48px 0 40px; border-bottom: 1px solid var(--border); }
+.news-hero-inner { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+.news-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+.news-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--amber); }
+.news-title { font-family: var(--font-display); font-size: 80px; font-weight: 900; text-transform: uppercase; line-height: 0.9; letter-spacing: -2px; color: var(--text); }
+.news-title em { color: var(--amber); font-style: normal; }
+.news-desc { font-size: 14px; color: var(--muted); max-width: 360px; line-height: 1.7; margin-top: 14px; }
+.news-stats { display: flex; gap: 32px; flex-shrink: 0; }
+.news-stat-num { font-family: var(--font-display); font-size: 40px; font-weight: 900; color: var(--amber); line-height: 1; }
+.news-stat-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+/* ── FILTER BAR ── */
+.filter-bar { padding: 18px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filter-label { font-family: var(--font-mono); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; flex-shrink: 0; }
+.filter-chips { display: flex; gap: 8px; flex-wrap: wrap; flex: 1; }
+.chip { font-family: var(--font-mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); padding: 7px 14px; cursor: pointer; transition: all 0.2s; background: none; white-space: nowrap; }
+.chip:hover { color: var(--text); border-color: var(--border2); }
+.chip.active { color: #000; background: var(--amber); border-color: var(--amber); }
+.filter-right { display: flex; gap: 8px; align-items: center; margin-left: auto; flex-shrink: 0; }
+.sort-select { background: var(--bg3); border: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 11px; padding: 7px 28px 7px 12px; outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A8880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; }
+
+/* ── LAYOUT ── */
+.news-layout { display: grid; grid-template-columns: 1fr 300px; gap: 48px; padding: 40px 0 80px; }
+
+/* ── FEATURED CARD (top story) ── */
+.featured-card { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border); background: var(--bg); cursor: pointer; transition: background 0.2s; margin-bottom: 1px; }
+.featured-card.full-width { grid-template-columns: 1fr; }
+.featured-card.full-width .featured-img { height: 420px; }
+.featured-card.full-width .featured-body { border-left: none; border-top: 1px solid var(--border); }
+.featured-card:hover { background: var(--card); }
+.featured-img { height: 280px; overflow: hidden; }
+.featured-img svg { display: block; width: 100%; height: 100%; }
+.featured-body { padding: 32px; display: flex; flex-direction: column; justify-content: space-between; border-left: 1px solid var(--border); }
+.featured-badge { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 16px; }
+.featured-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+.featured-title { font-family: var(--font-display); font-size: 32px; font-weight: 900; text-transform: uppercase; line-height: 1; color: var(--text); margin-bottom: 14px; }
+.featured-excerpt { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; flex: 1; }
+.featured-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); display: flex; gap: 10px; align-items: center; }
+.featured-meta-dot { width: 3px; height: 3px; background: var(--muted); border-radius: 50%; }
+.featured-read { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--amber); letter-spacing: 0.06em; margin-top: 18px; }
+
+/* ── ARTICLE GRID ── */
+.article-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-top: none; }
+.article-grid.single { grid-template-columns: 1fr; }
+.article-card { background: var(--bg); padding: 22px; cursor: pointer; transition: background 0.2s; }
+.article-card:hover { background: var(--card); }
+.article-card-img { width: 100%; height: 140px; background: var(--bg3); margin-bottom: 14px; overflow: hidden; }
+.article-card-cat { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.article-card-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.1; margin-bottom: 8px; }
+.article-card-excerpt { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
+.article-card-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); display: flex; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+/* ── LIST VIEW (Breaking / Analysis) ── */
+.article-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-top: none; }
+.list-item { display: flex; gap: 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.2s; }
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: var(--card); }
+.list-item-num { font-family: var(--font-display); font-size: 36px; font-weight: 900; color: var(--border2); padding: 20px 20px; border-right: 1px solid var(--border); min-width: 72px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: color 0.2s; }
+.list-item:hover .list-item-num { color: var(--amber); }
+.list-item-body { padding: 20px 24px; flex: 1; }
+.list-item-cat { font-family: var(--font-mono); font-size: 10px; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+.list-item-title { font-family: var(--font-display); font-size: 20px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.05; margin-bottom: 6px; }
+.list-item-excerpt { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.list-item-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 10px; }
+.list-item-arrow { padding: 20px; display: flex; align-items: center; color: var(--muted); font-size: 18px; flex-shrink: 0; transition: color 0.2s; }
+.list-item:hover .list-item-arrow { color: var(--amber); }
+
+/* ── RESULTS BAR ── */
+.results-bar { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 0; margin-bottom: -1px; }
+.results-count { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.results-count strong { color: var(--amber); }
+
+/* ── NO RESULTS ── */
+.no-results { padding: 80px 24px; text-align: center; border: 1px solid var(--border); }
+.no-results h3 { font-family: var(--font-display); font-size: 28px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+.no-results p { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+
+/* ── SIDEBAR ── */
+.news-sidebar { display: flex; flex-direction: column; gap: 28px; }
+.sidebar-sticky { position: sticky; top: 82px; display: flex; flex-direction: column; gap: 28px; }
+.sidebar-widget { background: var(--bg2); border: 1px solid var(--border); }
+.sidebar-widget-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); }
+.sidebar-widget-body { padding: 18px; }
+.trending-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: opacity 0.2s; align-items: flex-start; }
+.trending-item:last-child { border-bottom: none; }
+.trending-item:hover { opacity: 0.75; }
+.trending-num { font-family: var(--font-display); font-size: 22px; font-weight: 900; color: var(--amber); line-height: 1; min-width: 28px; }
+.trending-title { font-family: var(--font-display); font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--text); line-height: 1.2; margin-bottom: 3px; }
+.trending-meta { font-family: var(--font-mono); font-size: 10px; color: var(--muted); }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.topic-tag { font-family: var(--font-mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border); padding: 6px 12px; cursor: pointer; transition: all 0.2s; }
+.topic-tag:hover { color: var(--amber); border-color: var(--amber); }
+.newsletter-widget { background: var(--card); border: 1px solid var(--border2); padding: 22px; }
+.newsletter-widget h3 { font-family: var(--font-display); font-size: 20px; font-weight: 900; text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+.newsletter-widget h3 span { color: var(--amber); }
+.newsletter-widget p { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.6; }
+.newsletter-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); color: var(--text); font-family: var(--font-body); font-size: 13px; padding: 10px 12px; outline: none; margin-bottom: 8px; box-sizing: border-box; }
+.newsletter-input:focus { border-color: var(--amber); }
+.newsletter-btn { width: 100%; background: var(--amber); color: #000; font-family: var(--font-display); font-size: 14px; font-weight: 900; text-transform: uppercase; padding: 11px; border: none; cursor: pointer; transition: background 0.2s; }
+.newsletter-btn:hover { background: var(--amber2); }
+.newsletter-toast { display: none; font-family: var(--font-mono); font-size: 11px; color: var(--green); margin-top: 8px; text-align: center; }
+
+/* ── LOAD MORE ── */
+.load-more-wrap { padding: 32px 0 0; display: flex; justify-content: center; }
+.load-more-btn { background: var(--bg3); border: 1px solid var(--border2); color: var(--muted); font-family: var(--font-display); font-size: 14px; font-weight: 700; text-transform: uppercase; padding: 12px 36px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.06em; }
+.load-more-btn:hover { color: var(--text); border-color: var(--amber); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) { .news-layout { grid-template-columns: 1fr; } }
+@media (max-width: 768px) {
+  .news-title { font-size: 52px; }
+  .featured-card { grid-template-columns: 1fr; }
+  .featured-img { height: 200px; }
+  .featured-body { border-left: none; border-top: 1px solid var(--border); }
+  .article-grid { grid-template-columns: 1fr; }
+  .container { padding: 0 16px; }
+}
+@media (max-width: 480px) { .news-title { font-size: 38px; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- PAGE HERO -->
+  <section class="news-hero">
+    <div class="news-hero-inner">
+      <div>
+        <div class="news-eyebrow" id="page-eyebrow">All News</div>
+        <div class="news-title">Sound<em>b</em><br>News</div>
+        <div class="news-desc" id="page-desc">The most important stories in audio technology, music industry, and gear culture — reported daily.</div>
+      </div>
+      <div class="news-stats">
+        <div>
+          <div class="news-stat-num" id="stat-count">24</div>
+          <div class="news-stat-label">Stories this week</div>
+        </div>
+        <div>
+          <div class="news-stat-num">6</div>
+          <div class="news-stat-label">Categories</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter</span>
+    <div class="filter-chips">
+      <button class="chip active" data-cat="all">All</button>
+      <button class="chip" data-cat="industry">Industry News</button>
+      <button class="chip" data-cat="technology">Technology</button>
+      <button class="chip" data-cat="events">Events &amp; Shows</button>
+      <button class="chip" data-cat="breaking">Breaking</button>
+      <button class="chip" data-cat="analysis">Analysis</button>
+      <button class="chip" data-cat="opinion">Opinion</button>
+    </div>
+    <div class="filter-right">
+      <select class="sort-select" id="sort-select">
+        <option value="latest">Latest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="popular">Most popular</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="news-layout">
+    <div>
+      <div class="results-bar">
+        <div class="results-count" id="results-count"><strong>24</strong> stories</div>
+      </div>
+
+      <!-- FEATURED (rendered by JS) -->
+      <div id="featured-slot"></div>
+
+      <!-- ARTICLE GRID (rendered by JS) -->
+      <div id="articles-slot"></div>
+
+      <div class="load-more-wrap" id="load-more-wrap">
+        <button class="load-more-btn" id="load-more-btn">Load more stories</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="news-sidebar">
+      <div class="sidebar-sticky">
+        <!-- Newsletter -->
+        <div class="newsletter-widget">
+          <h3>Sound<span>b</span><br>Daily Brief</h3>
+          <p>The most important audio stories, every morning before 9 AM.</p>
+          <input class="newsletter-input" type="email" placeholder="Your email address" id="nl-email">
+          <button class="newsletter-btn" id="nl-btn">Get the brief</button>
+          <div class="newsletter-toast" id="nl-toast">✓ You're subscribed!</div>
+        </div>
+
+        <!-- Trending — populated from CMS -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-header">Trending today</div>
+          <div class="sidebar-widget-body" id="news-trending-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Topics -->
+        <div class="sidebar-widget">
+          <div class="sidebar-widget-header">Topics</div>
+          <div class="sidebar-widget-body">
+            <div class="tag-cloud">
+              <span class="topic-tag" onclick="filterCat('industry')">Industry</span>
+              <span class="topic-tag" onclick="filterCat('technology')">Technology</span>
+              <span class="topic-tag" onclick="filterCat('analysis')">Analysis</span>
+              <span class="topic-tag" onclick="filterCat('opinion')">Opinion</span>
+              <span class="topic-tag" onclick="filterCat('breaking')">Breaking</span>
+              <span class="topic-tag" onclick="filterCat('events')">Events</span>
+              <span class="topic-tag">Headphones</span>
+              <span class="topic-tag">DAW</span>
+              <span class="topic-tag">Spatial Audio</span>
+              <span class="topic-tag">AI Music</span>
+              <span class="topic-tag">Vinyl</span>
+              <span class="topic-tag">Streaming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+</div>
+
+<script>
+/* ── ARTICLE DATABASE ── */
+var ARTICLES = [
+  { id:1,  cat:'industry',   label:'Industry News',  title:'Every Major Label Is Now Hiring Audio AI Engineers',               excerpt:'From detection to generation, AI is reshaping every corner of music production. We spoke to the people being hired.',       author:'Riya Sharma',   date:'June 22, 2025', read:'8 min',  popular:4800, featured:true,  color:'#1a0a0a' },
+  { id:2,  cat:'analysis',   label:'Analysis',       title:'Dolby Atmos vs Sony 360: The $10B Format War',                     excerpt:'Two competing spatial standards, thousands of conflicting masters, one very confused listener at the centre of it all.',  author:'Arjun Mehta',   date:'June 21, 2025', read:'12 min', popular:4200, featured:false, color:'#0d1a2e' },
+  { id:3,  cat:'breaking',   label:'Breaking',       title:'Apple Acquires Spatial Audio Startup Auphonic for $340M',          excerpt:'The move signals Apple\'s deepening commitment to making spatial audio the default for all content on its platforms.',      author:'Priya Singh',   date:'June 21, 2025', read:'4 min',  popular:6100, featured:false, color:'#1a1a0a' },
+  { id:4,  cat:'technology', label:'Technology',     title:'How AI Is Rewriting the Rules of Music Mastering',                 excerpt:'From LANDR to Adobe\'s Project Music GenAI, automated mastering is no longer a toy. We tested six platforms against engineers.',author:'Neel Kapoor',   date:'June 20, 2025', read:'15 min', popular:3900, featured:false, color:'#0a1a0d' },
+  { id:5,  cat:'industry',   label:'Industry News',  title:'The Headphone Market Is Splitting — Premium vs Everything Else',   excerpt:'Mid-range is disappearing. Here\'s why that\'s both a crisis and an opportunity for the entire audio industry.',          author:'Riya Sharma',   date:'June 19, 2025', read:'9 min',  popular:3200, featured:false, color:'#1a1a0a' },
+  { id:6,  cat:'events',     label:'Events & Shows', title:'NAMM 2025: Every Announcement That Actually Matters',              excerpt:'200+ products were launched. We filtered the noise and picked the 12 that will actually change how you make music.',        author:'Dev Kapoor',    date:'June 18, 2025', read:'11 min', popular:5500, featured:false, color:'#0a0a1a' },
+  { id:7,  cat:'opinion',    label:'Opinion',        title:'The Death of the 3.5mm Jack Was Slower Than We Thought',           excerpt:'Four years after the last major holdout dropped the headphone port, wired audio is having a quiet, stubborn comeback.',    author:'Arjun Mehta',   date:'June 17, 2025', read:'6 min',  popular:7200, featured:false, color:'#1a0a1a' },
+  { id:8,  cat:'analysis',   label:'Analysis',       title:'Why Lossless Audio Sounds Worse on Most Speakers',                 excerpt:'The technical case for lossless is airtight. The real-world case is more complicated than streaming services admit.',       author:'Priya Singh',   date:'June 16, 2025', read:'10 min', popular:4100, featured:false, color:'#0a1a1a' },
+  { id:9,  cat:'breaking',   label:'Breaking',       title:'Spotify Confirms Real-Time Mixing Feature for Podcasts',           excerpt:'The company filed a patent for live EQ and compression tools that let listeners shape their own listening experience.',     author:'Neel Kapoor',   date:'June 15, 2025', read:'3 min',  popular:2800, featured:false, color:'#1a0a0d' },
+  { id:10, cat:'technology', label:'Technology',     title:'The New Codec War: LC3 vs AAC vs LDAC in 2025',                   excerpt:'Bluetooth audio has never been better. The battle for the future of wireless sound is being fought on a technical level.',  author:'Dev Kapoor',    date:'June 14, 2025', read:'13 min', popular:3600, featured:false, color:'#0d0a1a' },
+  { id:11, cat:'industry',   label:'Industry News',  title:'Record Store Day 2025 Broke Every Sales Record — Again',           excerpt:'Vinyl sales on RSD 2025 topped $40M globally in a single day. The format\'s revival is now a permanent fixture.',           author:'Riya Sharma',   date:'June 13, 2025', read:'5 min',  popular:2200, featured:false, color:'#1a0f0a' },
+  { id:12, cat:'events',     label:'Events & Shows', title:'Superbooth 2025: The Synths Everyone Was Talking About',           excerpt:'Berlin\'s premier modular and electronic instrument festival delivered surprises, including two announcements nobody saw coming.',author:'Arjun Mehta',   date:'June 12, 2025', read:'9 min',  popular:4700, featured:false, color:'#0a0f1a' },
+  { id:13, cat:'opinion',    label:'Opinion',        title:'Streaming Has Ruined the Album Format. Here\'s the Evidence',      excerpt:'Fifteen data points that show how playlist-first distribution has fundamentally changed how music is written and produced.',  author:'Priya Singh',   date:'June 11, 2025', read:'14 min', popular:5800, featured:false, color:'#1a1a10' },
+  { id:14, cat:'analysis',   label:'Analysis',       title:'Inside Numark\'s DJ Controller That\'s Making Professionals Jealous',excerpt:'The $699 unit punches well above its weight. We spent three months with it in real club environments to find out why.',     author:'Dev Kapoor',    date:'June 10, 2025', read:'10 min', popular:3300, featured:false, color:'#0a1a10' },
+  { id:15, cat:'breaking',   label:'Breaking',       title:'Roland and Korg Confirm Joint Modular Ecosystem',                  excerpt:'In a move nobody predicted, two of the biggest names in electronic music hardware are building a shared CV/Gate standard.',  author:'Neel Kapoor',   date:'June 9,  2025', read:'5 min',  popular:6800, featured:false, color:'#100a1a' },
+  { id:16, cat:'technology', label:'Technology',     title:'The Room Correction Revolution: EQ Has Finally Gone Mainstream',   excerpt:'Auto-EQ and room correction used to be for mastering engineers. Now it\'s in $300 speakers. Here\'s what changed.',        author:'Arjun Mehta',   date:'June 8,  2025', read:'11 min', popular:2900, featured:false, color:'#0a140a' },
+  { id:17, cat:'industry',   label:'Industry News',  title:'Tidal Pivots to Hi-Fi B2B Licensing After User Base Stagnates',   excerpt:'The platform that pioneered lossless streaming is changing its model entirely, targeting studio and hardware partnerships.',   author:'Riya Sharma',   date:'June 7,  2025', read:'6 min',  popular:2100, featured:false, color:'#1a0a14' },
+  { id:18, cat:'events',     label:'Events & Shows', title:'AES New York 2025: The Five Talks That Will Define Audio\'s Future',excerpt:'From psychoacoustics to AI training sets, the year\'s most important academic audio conference did not disappoint.',         author:'Dev Kapoor',    date:'June 6,  2025', read:'8 min',  popular:1800, featured:false, color:'#0a0a14' },
+  { id:19, cat:'opinion',    label:'Opinion',        title:'The Problem With How Audio Reviewers Review Headphones',           excerpt:'Subjectivity dressed as objectivity. The measurement-first approach to headphone criticism has a serious epistemological flaw.',author:'Priya Singh',   date:'June 5,  2025', read:'12 min', popular:4500, featured:false, color:'#14100a' },
+  { id:20, cat:'analysis',   label:'Analysis',       title:'AR Rahman\'s New Studio Is Built Around a Philosophy, Not a Spec', excerpt:'Inside the most acoustically ambitious recording space in South Asia — and what it reveals about how he hears music.',       author:'Dev Kapoor',    date:'June 4,  2025', read:'16 min', popular:3100, featured:false, color:'#0a140a' },
+  { id:21, cat:'breaking',   label:'Breaking',       title:'Sony Files Patent for AI-Powered Live Concert Mastering',          excerpt:'The patent describes a system that can adjust a live mix in real time based on the acoustics of the physical venue.',       author:'Neel Kapoor',   date:'June 3,  2025', read:'4 min',  popular:3700, featured:false, color:'#140a0a' },
+  { id:22, cat:'technology', label:'Technology',     title:'We Tested 12 DACs Under ₹20,000 — Only One Is Worth Buying',      excerpt:'Blind tests, spectral analysis, and a lot of late nights. The results genuinely surprised everyone in the room.',          author:'Arjun Mehta',   date:'June 2,  2025', read:'18 min', popular:5200, featured:false, color:'#0a0a10' },
+  { id:23, cat:'industry',   label:'Industry News',  title:'The $99 IEM That Embarrassed $500 Flagships in Blind Tests',      excerpt:'A Shenzhen brand nobody had heard of sent us a sample. What happened next has the audiophile community divided.',           author:'Priya Singh',   date:'June 1,  2025', read:'8 min',  popular:8100, featured:false, color:'#14140a' },
+  { id:24, cat:'events',     label:'Events & Shows', title:'Glastonbury 2025\'s Sound System Was the Best in the Festival\'s History',excerpt:'The team behind this year\'s PA system used custom-built line arrays and an AI-assisted monitor mix. Here\'s how.',     author:'Dev Kapoor',    date:'May 31,  2025', read:'10 min', popular:4300, featured:false, color:'#0a1414' },
+];
+
+const CAT_META = {
+  all:        { label:'All News',       desc:'Every story across audio technology, industry, events, and more.' },
+  industry:   { label:'Industry News',  desc:'Labels, streaming, business moves, and the economics of audio.' },
+  technology: { label:'Technology',     desc:'Codecs, AI, formats, and the science of how we hear sound.' },
+  events:     { label:'Events & Shows', desc:'NAMM, AES, Superbooth, and every festival that matters.' },
+  breaking:   { label:'Breaking',       desc:'The latest — confirmed developments as they happen.' },
+  analysis:   { label:'Analysis',       desc:'Deep dives, data-driven takes, and long-form investigation.' },
+  opinion:    { label:'Opinion',        desc:'Columns, commentary, and takes you might not agree with.' },
+};
+
+let currentCat = 'all';
+let currentSort = 'latest';
+const PAGE_SIZE = 8;
+let visibleCount = PAGE_SIZE;
+
+/* ── NAVIGATION ── */
+function goToArticle(id) {
+  localStorage.setItem('soundb_article_id', String(id));
+  window.location.href = 'soundb-article?id=' + id;
+}
+
+/* ── READ URL PARAMS ── */
+function readParams() {
+  const p = new URLSearchParams(location.search);
+  var cat = p.get('cat');
+  if (!cat) {
+    cat = localStorage.getItem('soundb_cat') || 'all';
+  }
+  localStorage.removeItem('soundb_cat');
+  if (CAT_META[cat]) currentCat = cat;
+}
+
+/* ── FILTER + SORT ── */
+function getFiltered() {
+  let items = currentCat === 'all' ? [...ARTICLES] : ARTICLES.filter(a => a.cat === currentCat);
+  if (currentSort === 'oldest') items.sort((a,b) => a.id - b.id);
+  else if (currentSort === 'popular') items.sort((a,b) => b.popular - a.popular);
+  else items.sort((a,b) => b.id - a.id); // latest
+  return items;
+}
+
+/* ── SVG PLACEHOLDER ── */
+function artSVG(color, w=400, h=200) {
+  return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    <rect width="${w}" height="${h}" fill="${color}"/>
+    <defs><radialGradient id="ag${Math.random().toString(36).slice(2)}" cx="40%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#FF8C00" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="${w}" height="${h}" fill="url(#ag${Math.random().toString(36).slice(2)})"/>
+    <g opacity="0.5">
+      <rect x="${w*0.06}" y="${h*0.35}" width="5" height="${h*0.3}" rx="2" fill="#FF8C00"/>
+      <rect x="${w*0.06+12}" y="${h*0.25}" width="5" height="${h*0.5}" rx="2" fill="#FF8C00"/>
+      <rect x="${w*0.06+24}" y="${h*0.3}" width="5" height="${h*0.4}" rx="2" fill="#FF8C00"/>
+      <rect x="${w*0.06+36}" y="${h*0.2}" width="5" height="${h*0.6}" rx="2" fill="#FF8C00"/>
+      <rect x="${w*0.06+48}" y="${h*0.28}" width="5" height="${h*0.44}" rx="2" fill="#FF8C00"/>
+    </g>
+    <circle cx="${w*0.72}" cy="${h*0.5}" r="${Math.min(w,h)*0.28}" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.25"/>
+    <circle cx="${w*0.72}" cy="${h*0.5}" r="${Math.min(w,h)*0.14}" fill="#FF8C00" opacity="0.12"/>
+  </svg>`;
+}
+
+/* ── RENDER FEATURED ── */
+function renderFeatured(article, totalCount) {
+  if (!article) { document.getElementById('featured-slot').innerHTML = ''; return; }
+  // If this is the only article, go full-width — no empty right column
+  const alone = !totalCount || totalCount <= 1;
+  document.getElementById('featured-slot').innerHTML = `
+    <div class="featured-card${alone ? ' full-width' : ''}" onclick="goToArticle(${article.id})">
+      <div class="featured-img">${artSVG(article.color, 600, 280)}</div>
+      <div class="featured-body">
+        <div>
+          <div class="featured-badge"><span class="featured-badge-dot"></span>${article.label}</div>
+          <div class="featured-title">${article.title}</div>
+          <div class="featured-excerpt">${article.excerpt}</div>
+        </div>
+        <div>
+          <div class="featured-meta">
+            <span>${article.author}</span>
+            <span class="featured-meta-dot"></span>
+            <span>${article.date}</span>
+            <span class="featured-meta-dot"></span>
+            <span>${article.read} read</span>
+          </div>
+          <div class="featured-read">Read story →</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── RENDER GRID ── */
+function renderGrid(articles) {
+  if (!articles.length) {
+    document.getElementById('articles-slot').innerHTML = `
+      <div class="no-results">
+        <h3>No stories found</h3>
+        <p>Try a different category or check back soon.</p>
+      </div>`;
+    document.getElementById('load-more-wrap').style.display = 'none';
+    return;
+  }
+
+  // Decide layout: list view for Breaking, grid for everything else
+  const useList = currentCat === 'breaking' || currentCat === 'opinion';
+
+  if (useList) {
+    document.getElementById('articles-slot').innerHTML = `
+      <div class="article-list">
+        ${articles.map((a,i) => `
+          <div class="list-item" onclick="goToArticle(${a.id})">
+            <div class="list-item-num">${String(i+1).padStart(2,'0')}</div>
+            <div class="list-item-body">
+              <div class="list-item-cat">${a.label}</div>
+              <div class="list-item-title">${a.title}</div>
+              <div class="list-item-excerpt">${a.excerpt}</div>
+              <div class="list-item-meta">${a.author} · ${a.date} · ${a.read} read</div>
+            </div>
+            <div class="list-item-arrow">→</div>
+          </div>`).join('')}
+      </div>`;
+  } else {
+    document.getElementById('articles-slot').innerHTML = `
+      <div class="article-grid">
+        ${articles.map(a => `
+          <div class="article-card" onclick="goToArticle(${a.id})">
+            <div class="article-card-img">${artSVG(a.color, 300, 140)}</div>
+            <div class="article-card-cat">${a.label}</div>
+            <div class="article-card-title">${a.title}</div>
+            <div class="article-card-excerpt">${a.excerpt}</div>
+            <div class="article-card-meta">
+              <span>${a.author}</span><span>·</span>
+              <span>${a.date}</span><span>·</span>
+              <span>${a.read} read</span>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }
+}
+
+/* ── MAIN RENDER ── */
+function render() {
+  const meta = CAT_META[currentCat];
+  document.title = `${meta.label} — Soundb`;
+  document.getElementById('page-eyebrow').textContent = meta.label;
+  document.getElementById('page-desc').textContent = meta.desc;
+
+  const all = getFiltered();
+  // Featured card only makes sense with 3+ articles.
+  // With 1 article: full-width featured, no grid.
+  // With 2 articles: no featured, both in grid side by side.
+  // With 3+ articles: featured:true is hero, rest go to grid.
+  const useFeatured = all.length === 1 || all.length >= 3;
+  // Pick featured:true article — not coverStory (that's homepage only)
+  var featuredPick = all.find(function(a){ return a.featured; });
+  const featured = useFeatured ? (featuredPick || all[0]) : null;
+  // Remove featured from grid by ID — prevents duplicate appearing in grid
+  var gridArticles = featured
+    ? all.filter(function(a){ return a.id !== featured.id; })
+    : all;
+  const rest = gridArticles.slice(0, visibleCount);
+  const total = gridArticles.length;
+
+  document.getElementById('stat-count').textContent = all.length;
+  document.getElementById('results-count').innerHTML = `<strong>${all.length}</strong> ${all.length === 1 ? 'story' : 'stories'}${currentCat !== 'all' ? ' in ' + meta.label : ''}`;
+
+  renderFeatured(featured, all.length);
+  renderGrid(rest);
+
+  const lmw = document.getElementById('load-more-wrap');
+  lmw.style.display = visibleCount < total ? 'flex' : 'none';
+
+  // sync chips
+  document.querySelectorAll('.chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.cat === currentCat);
+  });
+
+  // update URL without reload
+  const url = currentCat === 'all' ? 'soundb-news.html' : `soundb-news.html?cat=${currentCat}`;
+  history.replaceState({}, '', url);
+}
+
+function filterCat(cat) {
+  currentCat = cat;
+  visibleCount = PAGE_SIZE;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── CHIPS ── */
+document.querySelectorAll('.chip[data-cat]').forEach(chip => {
+  chip.addEventListener('click', () => filterCat(chip.dataset.cat));
+});
+
+/* ── SORT ── */
+document.getElementById('sort-select').addEventListener('change', function() {
+  currentSort = this.value;
+  visibleCount = PAGE_SIZE;
+  render();
+});
+
+/* ── LOAD MORE ── */
+document.getElementById('load-more-btn').addEventListener('click', () => {
+  visibleCount += PAGE_SIZE;
+  render();
+});
+
+/* ── NEWSLETTER ── */
+document.getElementById('nl-btn').addEventListener('click', () => {
+  const email = document.getElementById('nl-email').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('nl-email').style.borderColor = 'var(--red)';
+    return;
+  }
+  document.getElementById('nl-email').style.borderColor = '';
+  document.getElementById('nl-btn').style.display = 'none';
+  document.getElementById('nl-toast').style.display = 'block';
+});
+
+/* ── INIT ── */
+function renderTrending(articles) {
+  var list = document.getElementById('news-trending-list');
+  if (!list) return;
+  list.innerHTML = articles.slice(0, 5).map(function(a, i) {
+    return '<div class="trending-item" onclick="goToArticle(' + a.id + ')">'
+      + '<div class="trending-num">0' + (i+1) + '</div>'
+      + '<div><div class="trending-title">' + a.title + '</div>'
+      + '<div class="trending-meta">' + (a.read||a.readTime||'') + ' read</div></div>'
+      + '</div>';
+  }).join('');
+}
+
+CMS.getArticles(ARTICLES).then(function(data) {
+  ARTICLES = data;
+  renderTrending(data);
+  // Update nav dropdown with featured article
+  var navFeat = data.find(function(a){ return a.featured; }) || data[0];
+  if (navFeat && window.setSoundbFeatured) window.setSoundbFeatured(navFeat);
+  readParams();
+  render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gear — Soundb</title>
+
+
+</head>
+<body>
+
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div>
+        <div class="page-eyebrow">Gear Database</div>
+        <h1 class="page-title">All the<br><em>Gear</em></h1>
+        <p class="page-desc">Every piece of audio equipment we've reviewed, tested, or recommended — filterable by category, brand, price, and score.</p>
+      </div>
+      <div class="page-stats">
+        <div>
+          <div class="page-stat-num" id="total-count">—</div>
+          <div class="page-stat-label">Products listed</div>
+        </div>
+        <div>
+          <div class="page-stat-num" id="reviewed-count">—</div>
+          <div class="page-stat-label">Fully reviewed</div>
+        </div>
+        <div>
+          <div class="page-stat-num" id="cat-count">—</div>
+          <div class="page-stat-label">Categories</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILTER BAR (top) -->
+<div class="container">
+  <div class="filter-bar">
+    <span class="filter-label">Category</span>
+    <div class="filter-chips" id="cat-chips">
+      <button class="chip active" data-cat="All">All</button>
+      <button class="chip" data-cat="Headphones">Headphones</button>
+      <button class="chip" data-cat="IEMs">IEMs</button>
+      <button class="chip" data-cat="Interfaces">Interfaces</button>
+      <button class="chip" data-cat="Microphones">Microphones</button>
+      <button class="chip" data-cat="Synths">Synths</button>
+      <button class="chip" data-cat="Speakers">Speakers</button>
+      <button class="chip" data-cat="Preamps">Preamps</button>
+    </div>
+    <div class="filter-right">
+      <select class="sort-select" id="sort-select">
+        <option value="score">Sort: Top rated</option>
+        <option value="price-asc">Price: Low to high</option>
+        <option value="price-desc">Price: High to low</option>
+        <option value="newest">Newest first</option>
+        <option value="name">Name A–Z</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="grid-btn" title="Grid view">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="0" y="0" width="6" height="6" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="0" width="6" height="6" stroke="currentColor" stroke-width="1.2"/><rect x="0" y="8" width="6" height="6" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="6" height="6" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="view-btn" id="list-btn" title="List view">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><line x1="0" y1="2" x2="14" y2="2" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="7" x2="14" y2="7" stroke="currentColor" stroke-width="1.2"/><line x1="0" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="container">
+    <div class="gear-layout">
+
+      <!-- SIDEBAR -->
+      <aside class="filter-sidebar">
+
+        <div class="filter-group">
+          <div class="filter-group-label">Brand</div>
+          <div id="brand-filters"></div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Price Range (₹)</div>
+          <div class="price-range">
+            <div class="price-inputs">
+              <input class="price-input" type="number" id="price-min" placeholder="Min" min="0">
+              <span class="price-sep">—</span>
+              <input class="price-input" type="number" id="price-max" placeholder="Max" max="999999">
+            </div>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Minimum Score</div>
+          <div class="score-filter">
+            <button class="score-btn active" data-min="0" onclick="setMinScore(0)">Any</button>
+            <button class="score-btn" data-min="7" onclick="setMinScore(7)">7+</button>
+            <button class="score-btn" data-min="8" onclick="setMinScore(8)">8+</button>
+            <button class="score-btn" data-min="9" onclick="setMinScore(9)">9+</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-label">Badge</div>
+          <div id="badge-filters"></div>
+        </div>
+
+        <button class="clear-filters" onclick="clearAllFilters()">✕ Clear all filters</button>
+      </aside>
+
+      <!-- GEAR GRID -->
+      <div>
+        <div class="results-bar">
+          <span class="results-count"><strong id="shown-count">24</strong> products</span>
+        </div>
+        <div class="gear-grid" id="gear-grid"></div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- COMPARE TRAY -->
+<div class="compare-tray" id="compare-tray">
+  <span class="compare-tray-label">Compare</span>
+  <div class="compare-slots" id="compare-slots">
+    <div class="compare-slot" id="slot-0">Add a product</div>
+    <div class="compare-slot" id="slot-1">Add a product</div>
+    <div class="compare-slot" id="slot-2">Add a product</div>
+  </div>
+  <button class="compare-btn" onclick="openCompareModal()">Compare Specs →</button>
+  <button class="compare-clear" onclick="clearCompare()">Clear</button>
+</div>
+
+<!-- COMPARE MODAL -->
+<div id="compare-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(10,10,11,0.95);backdrop-filter:blur(16px);overflow-y:auto;">
+  <div style="max-width:1200px;margin:0 auto;padding:32px 24px 80px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+      <div>
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:0.14em;margin-bottom:6px;">Gear Comparison</div>
+        <div style="font-family:var(--font-display);font-size:36px;font-weight:900;text-transform:uppercase;letter-spacing:-0.5px;">Spec <em style="color:var(--amber);font-style:normal">Compare</em></div>
+      </div>
+      <button onclick="closeCompareModal()" style="background:var(--bg3);border:1px solid var(--border2);color:var(--muted);font-family:var(--font-mono);font-size:11px;padding:10px 18px;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">✕ Close</button>
+    </div>
+    <div id="compare-modal-body"></div>
+  </div>
+</div>
+
+
+<script>
+// ── GEAR DATABASE ────────────────────────────────────────────────────────────
+var GEAR = []; // populated from CMS
+
+// ── DERIVED STATS — computed from GEAR, never hardcoded ──────────────────
+// CMS note: when GEAR comes from an API, call initDerivedStats() after the
+// fetch resolves, passing the response data. Everything updates automatically.
+
+function initDerivedStats() {
+  // Hero stats
+  document.getElementById('total-count').textContent    = GEAR.length;
+  document.getElementById('reviewed-count').textContent = GEAR.filter(g => g.reviewed).length;
+  document.getElementById('cat-count').textContent      = new Set(GEAR.map(g => g.cat)).size;
+
+  // Brand counts — sorted by count desc, then alpha
+  const brandCounts = {};
+  GEAR.forEach(g => { brandCounts[g.brand] = (brandCounts[g.brand] || 0) + 1; });
+  const brands = Object.entries(brandCounts)
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+  document.getElementById('brand-filters').innerHTML = brands.map(([brand, count]) => `
+    <div class="filter-option" onclick="toggleFilter('brand','${brand.replace(/'/g,"\\'")}')">
+      <div class="filter-option-left">
+        <div class="filter-checkbox" data-filter="brand-${brand}"></div>
+        <span class="filter-option-name">${brand}</span>
+      </div>
+      <span class="filter-option-count">${count}</span>
+    </div>`).join('');
+
+  // Badge counts
+  const BADGE_LABELS = { editors: "Editor's Choice", new: 'New', budget: 'Budget Pick' };
+  const badgeCounts = {};
+  GEAR.forEach(g => { if (g.badge) badgeCounts[g.badge] = (badgeCounts[g.badge] || 0) + 1; });
+
+  document.getElementById('badge-filters').innerHTML = Object.entries(BADGE_LABELS)
+    .filter(([key]) => badgeCounts[key])
+    .map(([key, label]) => `
+    <div class="filter-option" onclick="toggleFilter('badge','${key}')">
+      <div class="filter-option-left">
+        <div class="filter-checkbox" data-filter="badge-${key}"></div>
+        <span class="filter-option-name">${label}</span>
+      </div>
+      <span class="filter-option-count">${badgeCounts[key] || 0}</span>
+    </div>`).join('');
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let state = {
+  cat: 'All',
+  brands: [],
+  badges: [],
+  minScore: 0,
+  priceMin: null,
+  priceMax: null,
+  sort: 'score',
+  view: 'grid',
+  compare: [],
+};
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function getFiltered() {
+  return GEAR.filter(g => {
+    if (state.cat !== 'All' && g.cat !== state.cat) return false;
+    if (state.brands.length && !state.brands.includes(g.brand)) return false;
+    if (state.badges.length && !state.badges.includes(g.badge)) return false;
+    if (calcScore(g) < state.minScore) return false;
+    if (state.priceMin && g.price < state.priceMin) return false;
+    if (state.priceMax && g.price > state.priceMax) return false;
+    return true;
+  }).sort((a,b) => {
+    if (state.sort === 'score')      return calcScore(b) - calcScore(a);
+    if (state.sort === 'price-asc')  return a.price - b.price;
+    if (state.sort === 'price-desc') return b.price - a.price;
+    if (state.sort === 'newest')     return (b.new ? 1:0) - (a.new ? 1:0);
+    if (state.sort === 'name')       return a.name.localeCompare(b.name);
+    return 0;
+  });
+}
+
+function formatPrice(p) {
+  return '₹' + p.toLocaleString('en-IN');
+}
+
+function cardSVG(g) {
+  if (g.id === 25) { // UA Volt 476P — custom interface illustration
+    return `<svg width="100%" height="180" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+      <rect width="280" height="180" fill="#060a10"/>
+      <defs>
+        <radialGradient id="vg${g.id}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#00c2ff" stop-opacity="0.1"/>
+          <stop offset="100%" stop-color="#060a10" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="vb${g.id}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a2535"/>
+          <stop offset="100%" stop-color="#0d1825"/>
+        </linearGradient>
+      </defs>
+      <rect width="280" height="180" fill="url(#vg${g.id})"/>
+      <rect x="30" y="36" width="220" height="108" rx="7" fill="url(#vb${g.id})" stroke="#1e3a5a" stroke-width="1"/>
+      <rect x="42" y="48" width="110" height="60" rx="3" fill="#040c14" stroke="#0a2a40" stroke-width="0.5"/>
+      <polyline points="47,78 58,62 69,84 80,54 91,72 102,60 113,80 124,68 132,78 141,56" fill="none" stroke="#00c2ff" stroke-width="1.2" opacity="0.85" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="175" cy="65" r="14" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.8"/>
+      <circle cx="175" cy="65" r="7" fill="#0a1520"/>
+      <circle cx="172" cy="56" r="2" fill="#00c2ff" opacity="0.9"/>
+      <circle cx="205" cy="65" r="14" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.8"/>
+      <circle cx="205" cy="65" r="7" fill="#0a1520"/>
+      <circle cx="202" cy="56" r="2" fill="#00c2ff" opacity="0.9"/>
+      <rect x="165" y="93" width="5" height="36" rx="2" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.5"/>
+      <rect x="163" y="108" width="9" height="6" rx="1" fill="#00c2ff" opacity="0.8"/>
+      <rect x="178" y="93" width="5" height="36" rx="2" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.5"/>
+      <rect x="176" y="115" width="9" height="6" rx="1" fill="#00c2ff" opacity="0.5"/>
+      <rect x="191" y="93" width="5" height="36" rx="2" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.5"/>
+      <rect x="189" y="100" width="9" height="6" rx="1" fill="#00c2ff" opacity="0.7"/>
+      <rect x="204" y="93" width="5" height="36" rx="2" fill="#0d1825" stroke="#1e3a5a" stroke-width="0.5"/>
+      <rect x="202" y="112" width="9" height="6" rx="1" fill="#00c2ff" opacity="0.6"/>
+      <circle cx="230" cy="100" r="5" fill="#00c2ff" opacity="0.55"/>
+      <rect x="30" y="142" width="220" height="2" rx="1" fill="#00c2ff" opacity="0.12"/>
+      <text x="140" y="162" text-anchor="middle" font-family="monospace" font-size="8" fill="#00c2ff" opacity="0.45" letter-spacing="2">UNIVERSAL AUDIO</text>
+    </svg>`;
+  }
+  return `<svg width="100%" height="180" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+    <rect width="280" height="180" fill="${g.color1}"/>
+    <circle cx="140" cy="90" r="55" fill="none" stroke="${g.color2}" stroke-width="0.5" opacity="0.4"/>
+    <circle cx="140" cy="90" r="35" fill="none" stroke="${g.color2}" stroke-width="0.5" opacity="0.35"/>
+    <circle cx="140" cy="90" r="15" fill="${g.color2}" opacity="0.25"/>
+    <circle cx="140" cy="90" r="5" fill="${g.color2}" opacity="0.7"/>
+    <text x="140" y="160" text-anchor="middle" font-family="monospace" font-size="9" fill="${g.color2}" opacity="0.5" letter-spacing="2">${g.brand.toUpperCase()}</text>
+  </svg>`;
+}
+
+function calcScore(g) {
+  // Use average of specsData scoreBars if available, else fall back to g.score
+  if (g.specsData && g.specsData.scoreBars && g.specsData.scoreBars.length) {
+    var sum = g.specsData.scoreBars.reduce(function(acc, b) { return acc + Number(b.v); }, 0);
+    return Math.round((sum / g.specsData.scoreBars.length) * 10) / 10;
+  }
+  return g.score;
+}
+
+function renderCard(g) {
+  const badgeHTML = g.badge ? `<div class="gear-card-badge badge-${g.badge}">${g.badge === 'editors' ? "Editor's Choice" : g.badge === 'new' ? 'New' : 'Budget Pick'}</div>` : '';
+  const reviewBtn = g.reviewed
+    ? `<button class="btn-review" onclick="event.stopPropagation();localStorage.setItem('soundb_spec_id','${g.id}');location.href='soundb-specs.html?id=${g.id}'">View Specs</button>`
+    : `<button class="btn-review" onclick="event.stopPropagation();localStorage.setItem('soundb_spec_id','${g.id}');location.href='soundb-specs.html?id=${g.id}'">View Specs</button>`;
+  const inCompare = state.compare.includes(g.id);
+  return `
+    <div class="gear-card" onclick="localStorage.setItem('soundb_spec_id','${g.id}');location.href='soundb-specs.html?id=${g.id}'" data-id="${g.id}">
+      <div class="gear-card-img">
+        ${cardSVG(g)}
+        ${badgeHTML}
+      </div>
+      <div class="gear-card-body">
+        <div class="gear-card-cat">${g.cat}</div>
+        <div class="gear-card-name">${g.name}</div>
+        <div class="gear-card-brand">${g.brand}</div>
+        <div class="gear-card-desc">${g.desc}</div>
+        <div class="gear-card-footer">
+          <div class="gear-card-price">${formatPrice(g.price)}</div>
+          <div class="gear-card-score"><span class="score-num">${calcScore(g)}</span><span class="score-den">/10</span></div>
+        </div>
+        <div class="gear-card-action">
+          ${reviewBtn}
+          <button class="btn-save compare-toggle" onclick="event.stopPropagation();toggleCompare(${g.id},this)" style="${inCompare ? 'color:var(--amber);border-color:var(--amber)' : ''}">
+            ${inCompare ? '✓ Added' : '+ Compare'}
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  const filtered = getFiltered();
+  const grid = document.getElementById('gear-grid');
+  grid.className = 'gear-grid' + (state.view === 'list' ? ' list-view' : '');
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="no-results-msg"><h3>Nothing found</h3><p>Try adjusting your filters</p></div>`;
+  } else {
+    grid.innerHTML = filtered.map(renderCard).join('');
+  }
+  document.getElementById('shown-count').textContent = filtered.length;
+  document.getElementById('total-count').textContent  = GEAR.length;
+
+  // Sync checkbox states — needed because sidebar is now dynamic
+  document.querySelectorAll('.filter-checkbox').forEach(cb => {
+    const [type, ...rest] = cb.dataset.filter.split('-');
+    const val = rest.join('-');
+    const active = type === 'brand'
+      ? state.brands.includes(val)
+      : state.badges.includes(val);
+    cb.classList.toggle('checked', active);
+  });
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────────────
+document.querySelectorAll('#cat-chips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#cat-chips .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    state.cat = chip.dataset.cat;
+    render();
+  });
+});
+
+function filterCat(cat) {
+  state.cat = cat;
+  document.querySelectorAll('#cat-chips .chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.cat === cat);
+  });
+  render();
+}
+
+function toggleFilter(type, val) {
+  const arr = type === 'brand' ? state.brands : state.badges;
+  const idx = arr.indexOf(val);
+  if (idx === -1) arr.push(val); else arr.splice(idx, 1);
+  document.querySelector(`[data-filter="${type}-${val}"]`).classList.toggle('checked', arr.includes(val));
+  render();
+}
+
+function setMinScore(min) {
+  state.minScore = min;
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('active', +b.dataset.min === min));
+  render();
+}
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort = e.target.value; render();
+});
+
+document.getElementById('grid-btn').addEventListener('click', () => {
+  state.view = 'grid';
+  document.getElementById('grid-btn').classList.add('active');
+  document.getElementById('list-btn').classList.remove('active');
+  render();
+});
+
+document.getElementById('list-btn').addEventListener('click', () => {
+  state.view = 'list';
+  document.getElementById('list-btn').classList.add('active');
+  document.getElementById('grid-btn').classList.remove('active');
+  render();
+});
+
+document.getElementById('price-min').addEventListener('input', e => { state.priceMin = e.target.value ? +e.target.value : null; render(); });
+document.getElementById('price-max').addEventListener('input', e => { state.priceMax = e.target.value ? +e.target.value : null; render(); });
+
+function clearAllFilters() {
+  state = { ...state, cat:'All', brands:[], badges:[], minScore:0, priceMin:null, priceMax:null };
+  document.querySelectorAll('#cat-chips .chip').forEach(c => c.classList.toggle('active', c.dataset.cat === 'All'));
+  document.querySelectorAll('.filter-checkbox').forEach(c => c.classList.remove('checked'));
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.toggle('active', +b.dataset.min === 0));
+  document.getElementById('price-min').value = '';
+  document.getElementById('price-max').value = '';
+  render();
+}
+
+// ── COMPARE ────────────────────────────────────────────────────────────────
+function toggleCompare(id, btn) {
+  const idx = state.compare.indexOf(id);
+  if (idx === -1) {
+    if (state.compare.length >= 3) { alert('Max 3 products to compare'); return; }
+    state.compare.push(id);
+  } else {
+    state.compare.splice(idx, 1);
+  }
+  updateCompareTray();
+  render();
+}
+
+function updateCompareTray() {
+  const tray = document.getElementById('compare-tray');
+  tray.classList.toggle('visible', state.compare.length > 0);
+  for (let i = 0; i < 3; i++) {
+    const slot = document.getElementById(`slot-${i}`);
+    const gId = state.compare[i];
+    if (gId) {
+      const g = GEAR.find(x => x.id === gId);
+      slot.classList.add('filled');
+      slot.innerHTML = `<span class="compare-slot-name">${g.name}</span><button class="compare-slot-remove" onclick="removeCompare(${gId})">×</button>`;
+    } else {
+      slot.classList.remove('filled');
+      slot.innerHTML = 'Add a product';
+    }
+  }
+}
+
+function removeCompare(id) {
+  state.compare = state.compare.filter(x => x !== id);
+  updateCompareTray();
+  render();
+}
+
+function clearCompare() {
+  state.compare = [];
+  updateCompareTray();
+  render();
+}
+
+// ── SPECS DATA FOR COMPARE ────────────────────────────────────────────────
+const SPECS_DB = {
+  1:{scoreBars:[{l:'Sound Quality',v:9.4},{l:'Build Quality',v:9.0},{l:'Comfort',v:8.6},{l:'Value',v:8.2},{l:'Features',v:8.8}],specs:[{section:'Driver & Transducer',rows:[['Driver Type','Ring Radiator dynamic (56mm)'],['Frequency Response','6 – 48,000 Hz'],['Impedance','300 Ω'],['Sensitivity','103 dB (1kHz / 1 Vrms)'],['THD','< 0.02%']]},{section:'Physical',rows:[['Weight','360g'],['Cup Design','Closed-back / glass'],['Ear Pads','Microfibre'],['Cable','3m balanced XLR-4 + 6.3mm'],['Balanced','Yes, 4-pin XLR']]}]},
+  2:{scoreBars:[{l:'Sound Quality',v:8.8},{l:'ANC',v:9.6},{l:'Comfort',v:9.0},{l:'Battery Life',v:9.2},{l:'Features',v:9.4}],specs:[{section:'Driver & Audio',rows:[['Driver Size','40mm dynamic'],['Frequency Response','4 – 40,000 Hz'],['Impedance','48 Ω (wired)'],['Sensitivity','101 dB/mW'],['Codec','LDAC, AAC, SBC, LC3']]},{section:'Battery & Wireless',rows:[['Battery Life','30h ANC, 40h ANC-off'],['Quick Charge','3 min = 3 hrs'],['Bluetooth','5.3'],['Multipoint','Yes, 2 devices'],['Weight','250g']]}]},
+  5:{scoreBars:[{l:'Sound Quality',v:9.6},{l:'Build Quality',v:9.5},{l:'Preamp',v:9.3},{l:'Versatility',v:9.0},{l:'Value',v:9.1}],specs:[{section:'Capsule',rows:[['Type','Dynamic cardioid'],['Polar Pattern','Cardioid'],['Frequency Response','50 – 20,000 Hz'],['Sensitivity','-59.0 dBV/Pa'],['Self-Noise','< 6 dB-A']]},{section:'Built-in Preamp',rows:[['Gain Range','0 / +18 / +28 dB'],['Output Impedance','150 Ω'],['Phantom Power','48V required'],['Weight','797g'],['Connector','XLR 3-pin']]}]},
+  7:{scoreBars:[{l:'Conversion Quality',v:9.2},{l:'Preamp Quality',v:9.0},{l:'Build',v:9.4},{l:'Software',v:8.6},{l:'Value',v:8.4}],specs:[{section:'Inputs & Outputs',rows:[['Mic Inputs','2 × XLR combo'],['Headphone Out','1 × 1/4"'],['Monitor Outs','2 × 1/4" TRS'],['USB','Type-C bus-powered'],['Optical','None']]},{section:'Performance',rows:[['Sample Rates','44.1 – 192 kHz'],['Bit Depth','32-bit'],['Dynamic Range','130 dB'],['THD+N','-109 dBu'],['Preamp Gain','0 – 75 dB']]}]},
+  25:{scoreBars:[{l:'Conversion Quality',v:9.4},{l:'Preamp Quality',v:9.3},{l:'Build',v:9.0},{l:'Software',v:8.8},{l:'Value',v:9.5}],specs:[{section:'Inputs & Outputs',rows:[['Mic Inputs','4 × XLR combo'],['Headphone Outs','2 × 1/4"'],['Monitor Outs','2 × 1/4" TRS'],['USB','Type-C bus-powered'],['Onboard FX','UA 76-style compression']]},{section:'Performance',rows:[['Sample Rates','44.1 – 192 kHz'],['Bit Depth','24-bit'],['Dynamic Range','119 dB'],['Preamp Gain','0 – 60 dB'],['Bus Powered','Yes']]}]},
+};
+
+function getCatDefaultSpecs(g) {
+  const bars = { Headphones:[{l:'Sound Quality',v:+(g.score-0.2).toFixed(1)},{l:'Build',v:+(g.score-0.3).toFixed(1)},{l:'Comfort',v:+(g.score-0.5).toFixed(1)},{l:'Value',v:+(g.score-0.4).toFixed(1)},{l:'Features',v:+(g.score-0.1).toFixed(1)}], IEMs:[{l:'Sound Quality',v:+(g.score-0.1).toFixed(1)},{l:'Build',v:+(g.score-0.2).toFixed(1)},{l:'Fit & Seal',v:+(g.score-0.4).toFixed(1)},{l:'Isolation',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.5).toFixed(1)}], Microphones:[{l:'Sound Quality',v:+(g.score-0.1).toFixed(1)},{l:'Build',v:+(g.score-0.2).toFixed(1)},{l:'Versatility',v:+(g.score-0.4).toFixed(1)},{l:'Self-Noise',v:+(g.score-0.3).toFixed(1)},{l:'Value',v:+(g.score-0.3).toFixed(1)}], Interfaces:[{l:'Conversion',v:+(g.score-0.2).toFixed(1)},{l:'Preamps',v:+(g.score-0.3).toFixed(1)},{l:'Build',v:+(g.score-0.4).toFixed(1)},{l:'Software',v:+(g.score-0.4).toFixed(1)},{l:'Value',v:+(g.score-0.1).toFixed(1)}], Synths:[{l:'Sound Engine',v:+(g.score-0.1).toFixed(1)},{l:'Build',v:+(g.score-0.3).toFixed(1)},{l:'Ease of Use',v:+(g.score-0.4).toFixed(1)},{l:'Versatility',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.3).toFixed(1)}], Speakers:[{l:'Low End',v:+(g.score-0.2).toFixed(1)},{l:'Midrange',v:+(g.score-0.1).toFixed(1)},{l:'High End',v:+(g.score-0.3).toFixed(1)},{l:'Imaging',v:+(g.score-0.2).toFixed(1)},{l:'Value',v:+(g.score-0.4).toFixed(1)}] };
+  const specs = { Headphones:[{section:'Driver',rows:[['Driver','Dynamic'],['Freq. Response','20–20,000 Hz'],['Impedance','32 Ω'],['Sensitivity','100 dB/mW'],['Weight','~280g']]},{section:'Build',rows:[['Type','Closed-back over-ear'],['Ear Pads','Protein leather'],['Cable','Detachable 1.2m'],['Connector','3.5mm']]}], IEMs:[{section:'Driver',rows:[['Driver','BA / hybrid'],['Freq. Response','5–40,000 Hz'],['Impedance','16 Ω'],['Sensitivity','106 dB/mW'],['Cable','Detachable']]}], Microphones:[{section:'Capsule',rows:[['Type','Dynamic / Condenser'],['Pattern','Cardioid'],['Freq. Response','20–20,000 Hz'],['Sensitivity','-40 dBV/Pa'],['Self-Noise','< 12 dB-A']]},{section:'Physical',rows:[['Output','XLR'],['Phantom','48V'],['Weight','~300g']]}], Interfaces:[{section:'I/O',rows:[['Mic Inputs','2 × XLR combo'],['Monitor Outs','2 × 1/4" TRS'],['Headphone','1 × 1/4"'],['USB','Type-C']]},{section:'Performance',rows:[['Sample Rate','44.1–192 kHz'],['Bit Depth','24-bit'],['Dynamic Range','110 dB'],['Preamp Gain','0–60 dB']]}], Synths:[{section:'Sound Engine',rows:[['Engine','Analogue / hybrid'],['Polyphony','8–32 voices'],['Filter','24dB LP'],['MIDI','In/Out/USB']]},{section:'I/O',rows:[['Audio Out','Stereo 1/4"'],['Headphone','3.5mm / 1/4"'],['Power','DC adapter']]}], Speakers:[{section:'Drivers',rows:[['Woofer','5–8 inch'],['Tweeter','1 inch soft-dome'],['Power','60–150W'],['Freq. Response','52 Hz – 30 kHz']]},{section:'Connectivity',rows:[['Input','Balanced XLR + 1/4"'],['Room EQ','Acoustic Space switch']]}] };
+  return { scoreBars: bars[g.cat] || bars.Headphones, specs: specs[g.cat] || specs.Headphones };
+}
+
+function getCompareData(g) {
+  const db = SPECS_DB[g.id];
+  if (db) return db;
+  return getCatDefaultSpecs(g);
+}
+
+function openCompareModal() {
+  if (state.compare.length < 2) { alert('Add at least 2 products to compare.'); return; }
+  const products = state.compare.map(id => GEAR.find(x => x.id === id));
+  const datas = products.map(g => getCompareData(g));
+  const n = products.length;
+
+  // Score bars section
+  const allLabels = [...new Set(datas.flatMap(d => d.scoreBars.map(b => b.l)))];
+  let scoreHTML = `<div style="margin-bottom:40px;"><div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;"><span style="width:16px;height:1px;background:var(--amber);display:inline-block"></span>Score Breakdown</div>`;
+  scoreHTML += `<div style="display:grid;grid-template-columns:140px ${products.map(()=>'1fr').join(' ')};gap:16px 24px;align-items:center;">`;
+  scoreHTML += `<div></div>${products.map(g=>`<div style="font-family:var(--font-display);font-size:16px;font-weight:800;text-transform:uppercase;color:var(--amber);padding-bottom:8px;border-bottom:1px solid var(--border)">${g.name}</div>`).join('')}`;
+  allLabels.forEach(label => {
+    scoreHTML += `<div style="font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em">${label}</div>`;
+    datas.forEach(d => {
+      const bar = d.scoreBars.find(b => b.l === label);
+      const val = bar ? bar.v : '—';
+      const pct = bar ? bar.v * 10 : 0;
+      scoreHTML += `<div style="display:flex;align-items:center;gap:10px;"><div style="flex:1;height:3px;background:var(--bg3);border:1px solid var(--border);"><div style="width:${pct}%;height:100%;background:var(--amber);transition:width 0.8s"></div></div><div style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text);min-width:24px;text-align:right">${val}</div></div>`;
+    });
+  });
+  scoreHTML += `</div></div>`;
+
+  // Header cards
+  let headerHTML = `<div style="display:grid;grid-template-columns:${products.map(()=>'1fr').join(' ')};gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;">`;
+  headerHTML += products.map((g,i) => {
+    const badge = g.badge ? `<span style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:3px 8px;background:${g.badge==='editors'?'var(--amber)':g.badge==='new'?'var(--blue)':'var(--green)'};color:#000">${g.badge==='editors'?"Editor's Choice":g.badge==='new'?'New':'Budget Pick'}</span>` : '';
+    return `<div style="background:var(--bg2);padding:24px;">
+      ${badge?`<div style="margin-bottom:12px">${badge}</div>`:''}
+      <div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px">${g.cat}</div>
+      <div style="font-family:var(--font-display);font-size:28px;font-weight:900;text-transform:uppercase;color:var(--text);line-height:1;margin-bottom:4px">${g.name}</div>
+      <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:16px">${g.brand}</div>
+      <div style="display:flex;align-items:baseline;gap:12px;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--text)">${formatPrice(g.price)}</div>
+        <div style="font-family:var(--font-display);font-size:22px;font-weight:900;color:var(--amber)">${g.score}<span style="font-family:var(--font-mono);font-size:10px;color:var(--muted)">/10</span></div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        ${g.reviewed
+          ? `<button onclick="localStorage.setItem('soundb_review_id','${g.id}');location.href='soundb-review.html?id=${g.id}'" style="flex:1;background:var(--amber);color:#000;font-family:var(--font-display);font-size:12px;font-weight:900;text-transform:uppercase;padding:8px;border:none;cursor:pointer">Read Review</button>`
+          : `<button disabled style="flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--muted);font-family:var(--font-display);font-size:12px;font-weight:900;text-transform:uppercase;padding:8px;cursor:not-allowed;opacity:0.5">Review Coming Soon</button>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+  headerHTML += '</div>';
+
+  // Spec rows comparison
+  const allSections = [...new Set(datas.flatMap(d => d.specs.map(s => s.section)))];
+  let specsHTML = '';
+  allSections.forEach(sectionName => {
+    const allRows = [...new Map(datas.flatMap(d => { const sec = d.specs.find(s => s.section === sectionName); return sec ? sec.rows : []; }).map(r => [r[0], r])).values()];
+    if (!allRows.length) return;
+    specsHTML += `<div style="margin-bottom:32px;"><div style="font-family:var(--font-mono);font-size:10px;color:var(--amber);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;"><span style="width:16px;height:1px;background:var(--amber);display:inline-block"></span>${sectionName}</div>`;
+    specsHTML += `<div style="display:grid;grid-template-columns:160px ${products.map(()=>'1fr').join(' ')};border:1px solid var(--border);">`;
+    // Header row
+    specsHTML += `<div style="background:var(--bg3);padding:10px 14px;font-family:var(--font-mono);font-size:9px;color:var(--muted);text-transform:uppercase;border-bottom:1px solid var(--border)">Spec</div>`;
+    products.forEach(g => { specsHTML += `<div style="background:var(--bg3);padding:10px 14px;font-family:var(--font-display);font-size:13px;font-weight:800;text-transform:uppercase;color:var(--amber);border-bottom:1px solid var(--border);border-left:1px solid var(--border)">${g.name}</div>`; });
+    // Data rows
+    allRows.forEach(([key]) => {
+      const vals = datas.map(d => { const sec = d.specs.find(s => s.section === sectionName); const row = sec ? sec.rows.find(r => r[0] === key) : null; return row ? row[1] : '—'; });
+      const allSame = vals.every(v => v === vals[0]);
+      specsHTML += `<div style="padding:10px 14px;font-family:var(--font-mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border)">${key}</div>`;
+      vals.forEach((val, vi) => {
+        const isDiff = !allSame && val !== '—';
+        specsHTML += `<div style="padding:10px 14px;font-size:13px;color:${isDiff?'var(--amber)':'var(--text)'};border-bottom:1px solid var(--border);border-left:1px solid var(--border);${isDiff?'font-weight:600':''}">${val}</div>`;
+      });
+    });
+    specsHTML += '</div></div>';
+  });
+
+  document.getElementById('compare-modal-body').innerHTML = headerHTML + scoreHTML + specsHTML;
+  document.getElementById('compare-modal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  // Animate bars
+  setTimeout(() => { document.querySelectorAll('#compare-modal-body div[style*="transition:width"]').forEach(el => { const w = el.style.width; el.style.width='0'; requestAnimationFrame(()=>{el.style.width=w;}); }); }, 80);
+}
+
+function closeCompareModal() {
+  document.getElementById('compare-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+CMS.getGear(GEAR).then(function(data) {
+  GEAR = data;
+  initDerivedStats();
+  render();
+});
+</script>
+</body>
+</html>

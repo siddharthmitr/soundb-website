@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "gear_reviews",
+  "info": {
+    "singularName": "gear-review",
+    "pluralName": "gear-reviews",
+    "displayName": "GearReviews"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}

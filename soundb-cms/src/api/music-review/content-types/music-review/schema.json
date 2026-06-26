@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "music_reviews",
+  "info": {
+    "singularName": "music-review",
+    "pluralName": "music-reviews",
+    "displayName": "MusicReviews"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}

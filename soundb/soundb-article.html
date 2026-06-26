@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="soundb-shared.css">
+  <script src="soundb-cms.js"></script>
+  <script src="soundb-components.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Article — Soundb</title>
+  <meta name="description" id="meta-desc" content="Soundb — audio technology and music journalism.">
+  <meta property="og:title" id="og-title" content="Article — Soundb">
+  <meta property="og:description" id="og-desc" content="">
+  <meta property="og:type" content="article">
+  <meta property="og:url" id="og-url" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="tw-title" content="Article — Soundb">
+  <script type="application/ld+json" id="json-ld">{}</script>
+</head>
+<body>
+
+<!-- READ PROGRESS -->
+<div class="read-progress"><div class="read-progress-fill" id="progress"></div></div>
+
+<!-- LOADING STATE -->
+<div id="article-loading" style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
+  <div style="font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:0.1em;">Loading…</div>
+</div>
+
+<!-- ARTICLE — filled by loadArticle() -->
+<article class="article-hero" id="article-root" style="display:none">
+  <div class="container">
+
+    <div class="breadcrumb">
+      <a href="soundb.html">Home</a> /
+      <a href="soundb-news.html" id="bc-cat-link">News</a> /
+      <span style="color:var(--text)" id="bc-title">—</span>
+    </div>
+
+    <div class="article-cat" id="art-cat"></div>
+    <h1 class="article-headline" id="art-headline"></h1>
+    <p class="article-deck" id="art-deck"></p>
+
+    <div class="meta-bar">
+      <div class="meta-author">
+        <div class="author-av" id="art-av"></div>
+        <div>
+          <div class="author-name" id="art-author"></div>
+          <div class="author-role" id="art-author-role">Soundb Editorial</div>
+        </div>
+      </div>
+      <div class="meta-div"></div>
+      <div class="meta-info"><strong id="art-date"></strong><span id="art-read"></span></div>
+    </div>
+
+    <!-- Cover image -->
+    <div class="cover-img" id="art-cover"></div>
+
+    <div class="article-layout">
+
+      <!-- BODY -->
+      <div class="article-body">
+        <div id="art-body"></div>
+
+        <div class="article-tags" id="art-tags"></div>
+
+        <!-- Author bio -->
+        <div class="author-bio">
+          <div class="author-bio-av" id="art-bio-av"></div>
+          <div>
+            <div class="author-bio-name" id="art-bio-name"></div>
+            <div class="author-bio-role">Soundb Editorial</div>
+            <div class="author-bio-text">Journalist and editor at Soundb covering audio technology, music, and the culture of sound.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside class="article-sidebar">
+        <div class="sticky-sidebar">
+
+          <!-- TOC — built from body headings -->
+          <div id="toc-wrap" style="display:none">
+            <div class="toc-label">In this article</div>
+            <ul class="toc-list" id="toc-list"></ul>
+          </div>
+
+          <!-- Related stories -->
+          <div>
+            <div class="related-label">More stories</div>
+            <div id="related-list"></div>
+          </div>
+
+          <!-- Sidebar newsletter -->
+          <div class="sidebar-newsletter">
+            <h4>Sound<span>b</span> Daily</h4>
+            <p>Audio & music news every morning. No noise.</p>
+            <input type="email" id="sidebar-email" placeholder="Your email address">
+            <button id="sidebar-sub-btn">Subscribe free</button>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+
+  </div>
+</article>
+
+<!-- MORE STORIES -->
+<section class="more-section" id="more-section" style="display:none">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-title">More from Soundb</span>
+      <a href="soundb-news.html" class="section-link">All stories →</a>
+    </div>
+    <div class="more-grid" id="more-grid"></div>
+  </div>
+</section>
+
+<script>
+/* ── CAT LABELS ── */
+var CAT_LABELS = {
+  industry:   'Industry News',
+  technology: 'Technology',
+  events:     'Events & Shows',
+  breaking:   'Breaking',
+  analysis:   'Analysis',
+  opinion:    'Opinion',
+  artists:    'Artists',
+};
+
+/* ── SVG art generator ── */
+function artSVG(color, w, h) {
+  var c = color || '#0a0d1a';
+  var id = 'ag' + Math.random().toString(36).slice(2,7);
+  return '<svg width="100%" height="100%" viewBox="0 0 ' + (w||1200) + ' ' + (h||520) + '" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">' +
+    '<defs><radialGradient id="' + id + '" cx="25%" cy="50%" r="65%">' +
+    '<stop offset="0%" stop-color="#FF8C00" stop-opacity="0.22"/>' +
+    '<stop offset="100%" stop-color="' + c + '" stop-opacity="0"/>' +
+    '</radialGradient></defs>' +
+    '<rect width="100%" height="100%" fill="' + c + '"/>' +
+    '<rect width="100%" height="100%" fill="url(#' + id + ')"/>' +
+    '<circle cx="50%" cy="50%" r="28%" fill="none" stroke="#FF8C00" stroke-width="0.5" opacity="0.18"/>' +
+    '<circle cx="50%" cy="50%" r="14%" fill="none" stroke="#FF8C00" stroke-width="0.4" opacity="0.24"/>' +
+    '<circle cx="50%" cy="50%" r="6%" fill="#FF8C00" opacity="0.1"/>' +
+    '<circle cx="50%" cy="50%" r="2%" fill="#FF8C00" opacity="0.55"/>' +
+    '<g opacity="0.3" transform="translate(0,' + ((h||520)*0.86) + ')">' +
+    '<polyline points="0,30 80,12 160,48 240,6 320,42 400,18 480,38 560,8 640,44 720,18 800,36 880,10 960,46 1040,18 1120,38 1200,24" fill="none" stroke="#FF8C00" stroke-width="1.5"/>' +
+    '</g></svg>';
+}
+
+/* ── Author initials ── */
+function initials(name) {
+  return (name || 'SB').split(' ').map(function(w){return w[0]||'';}).join('').slice(0,2).toUpperCase();
+}
+
+/* ── Build TOC from headings in rendered body ── */
+function buildTOC() {
+  var body = document.getElementById('art-body');
+  var headings = body.querySelectorAll('h2, h3');
+  if (headings.length < 2) { document.getElementById('toc-wrap').style.display = 'none'; return; }
+  document.getElementById('toc-wrap').style.display = 'block';
+  var list = document.getElementById('toc-list');
+  list.innerHTML = '';
+  headings.forEach(function(h, i) {
+    var id = 'sec-' + i;
+    h.id = id;
+    var li = document.createElement('li');
+    li.className = 'toc-item';
+    li.innerHTML = '<a href="#' + id + '">' + h.textContent + '</a>';
+    list.appendChild(li);
+  });
+  // Smooth scroll
+  list.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      var el = document.querySelector(a.getAttribute('href'));
+      if (el) {
+        var top = el.getBoundingClientRect().top + window.pageYOffset - 72 - 16;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    });
+  });
+  // Scroll-spy
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      var link = list.querySelector('a[href="#' + e.target.id + '"]');
+      if (link) link.closest('.toc-item').classList.toggle('active', e.isIntersecting);
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  headings.forEach(function(h) { observer.observe(h); });
+}
+
+/* ── Update meta tags ── */
+function updateMeta(article) {
+  var title = article.title + ' — Soundb';
+  var desc  = article.excerpt || article.title;
+  var url   = location.origin + location.pathname + '?id=' + article.id;
+  document.title = title;
+  document.getElementById('meta-desc').content  = desc;
+  document.getElementById('og-title').content   = title;
+  document.getElementById('og-desc').content    = desc;
+  document.getElementById('og-url').content     = url;
+  document.getElementById('tw-title').content   = title;
+  document.getElementById('json-ld').textContent = JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'NewsArticle',
+    'headline': article.title, 'description': desc,
+    'author': { '@type': 'Person', 'name': article.author },
+    'publisher': { '@type': 'Organization', 'name': 'Soundb', 'url': 'https://soundb.org' },
+    'datePublished': article.date, 'url': url
+  });
+  history.replaceState({}, '', '?id=' + article.id);
+}
+
+/* ── Render related articles in sidebar ── */
+function renderRelated(allArticles, currentId) {
+  var others = allArticles.filter(function(a) { return a.id !== currentId; }).slice(0, 3);
+  if (!others.length) { return; }
+  document.getElementById('related-list').innerHTML = others.map(function(a) {
+    return '<div class="related-item" onclick="loadArticle(' + JSON.stringify(a).replace(/"/g, '&quot;') + ');window.scrollTo({top:0,behavior:\'smooth\'})" style="cursor:pointer">' +
+      '<div class="related-thumb"><svg width="56" height="40" viewBox="0 0 56 40"><rect width="56" height="40" fill="' + (a.color||'#1a1a1a') + '"/><circle cx="28" cy="20" r="10" fill="none" stroke="#FF8C00" stroke-width="0.6" opacity="0.5"/><circle cx="28" cy="20" r="4" fill="#FF8C00" opacity="0.3"/></svg></div>' +
+      '<div><div class="related-cat">' + (a.label || CAT_LABELS[a.cat] || a.cat) + '</div><div class="related-title">' + a.title + '</div></div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ── Render more-stories grid ── */
+function renderMore(allArticles, currentId) {
+  var others = allArticles.filter(function(a) { return a.id !== currentId; }).slice(0, 3);
+  if (!others.length) { document.getElementById('more-section').style.display = 'none'; return; }
+  document.getElementById('more-section').style.display = 'block';
+  document.getElementById('more-grid').innerHTML = others.map(function(a) {
+    return '<div class="more-card" onclick="loadArticle(' + JSON.stringify(a).replace(/"/g, '&quot;') + ');window.scrollTo({top:0,behavior:\'smooth\'})">' +
+      '<div class="more-card-img">' + artSVG(a.color, 300, 120) + '</div>' +
+      '<div class="more-cat">' + (a.label || CAT_LABELS[a.cat] || a.cat) + '</div>' +
+      '<div class="more-title">' + a.title + '</div>' +
+      '<div class="more-meta">' + a.author + ' · ' + a.read + ' read</div>' +
+    '</div>';
+  }).join('');
+}
+
+/* ── LOAD ARTICLE ── */
+var ALL_ARTICLES = [];
+
+function loadArticle(article) {
+  updateMeta(article);
+
+  // Breadcrumb
+  var catLabel = article.label || CAT_LABELS[article.cat] || article.cat || 'News';
+  document.getElementById('bc-cat-link').textContent = catLabel;
+  document.getElementById('bc-cat-link').href = 'soundb-news.html?cat=' + (article.cat || '');
+  document.getElementById('bc-title').textContent = article.title;
+
+  // Header
+  document.getElementById('art-cat').textContent = catLabel;
+  document.getElementById('art-headline').textContent = article.title;
+  document.getElementById('art-deck').textContent = article.excerpt || '';
+
+  // Meta bar
+  var av = initials(article.author);
+  document.getElementById('art-av').textContent = av;
+  document.getElementById('art-author').textContent = article.author || 'Soundb Editors';
+  document.getElementById('art-date').textContent = article.date || '';
+  document.getElementById('art-read').textContent = (article.read || article.readTime || '') + ' read';
+
+  // Cover art
+  document.getElementById('art-cover').innerHTML = artSVG(article.color, 1200, 520);
+
+  // Body
+  var bodyHTML = '';
+  if (typeof article.body === 'string' && article.body.trim().startsWith('<')) {
+    // Already HTML from blocksToHTML converter
+    bodyHTML = article.body;
+  } else if (typeof article.body === 'string') {
+    // Plain text — wrap paragraphs
+    bodyHTML = article.body.split('\n\n').filter(Boolean).map(function(p) {
+      return '<p>' + p.trim() + '</p>';
+    }).join('');
+  }
+  document.getElementById('art-body').innerHTML = bodyHTML || '<p>Full article coming soon.</p>';
+
+  // Tags
+  var tags = article.tags || [];
+  document.getElementById('art-tags').innerHTML = tags.length
+    ? tags.map(function(t) { return '<span class="tag">' + t + '</span>'; }).join('')
+    : '';
+
+  // Author bio
+  document.getElementById('art-bio-av').textContent = av;
+  document.getElementById('art-bio-name').textContent = article.author || 'Soundb Editors';
+
+  // TOC from rendered headings
+  setTimeout(buildTOC, 50);
+
+  // Related + more cards
+  renderRelated(ALL_ARTICLES, article.id);
+  renderMore(ALL_ARTICLES, article.id);
+
+  // Show article, hide loader
+  document.getElementById('article-loading').style.display = 'none';
+  document.getElementById('article-root').style.display = 'block';
+}
+
+/* ── INIT ── */
+var params = new URLSearchParams(location.search);
+var rawId = params.get('id');
+
+// Fallback: npx serve strips query string on clean URL redirect
+// so we also store the ID in localStorage before navigating
+if (!rawId) {
+  rawId = localStorage.getItem('soundb_article_id');
+}
+// Clear after reading so stale ID doesn't persist
+localStorage.removeItem('soundb_article_id');
+
+var aid = rawId ? parseInt(rawId) : null;
+console.log('[Article] aid:', aid);
+
+CMS.getArticles([]).then(function(articles) {
+  ALL_ARTICLES = articles;
+  var article = null;
+  if (aid) {
+    article = articles.find(function(a) { return a.id === aid; });
+  }
+  console.log('[Article] Found article:', article ? article.title.slice(0,40) : 'NONE — using fallback');
+  // Fallback to first/featured article if no ID or ID not found
+  if (!article && articles.length) {
+    article = articles.find(function(a) { return a.featured; }) || articles[0];
+  }
+  if (article) {
+    loadArticle(article);
+  } else {
+    document.getElementById('article-loading').innerHTML =
+      '<div style="font-family:var(--font-mono);font-size:13px;color:var(--muted);text-align:center">' +
+      '<div style="font-size:48px;margin-bottom:16px">—</div>Article not found. <a href="soundb-news.html" style="color:var(--amber)">Back to News →</a></div>';
+  }
+});
+
+/* ── Read progress bar ── */
+window.addEventListener('scroll', function() {
+  var d = document.documentElement;
+  document.getElementById('progress').style.width =
+    (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
+});
+
+/* ── Sidebar newsletter ── */
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('sidebar-sub-btn');
+  if (btn) btn.addEventListener('click', function() {
+    var em = document.getElementById('sidebar-email');
+    if (!em.value.trim() || !em.value.includes('@')) { em.style.borderColor='var(--red)'; return; }
+    em.style.borderColor='';
+    btn.textContent = '✓ Subscribed!';
+    btn.style.background = 'var(--green)';
+    setTimeout(function() { btn.textContent = 'Subscribe free'; btn.style.background = ''; em.value = ''; }, 3000);
+  });
+});
+</script>
+</body>
+</html>
