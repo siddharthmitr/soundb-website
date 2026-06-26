@@ -626,8 +626,8 @@
    Client Credentials flow — no user login needed.
    NOTE: Move CLIENT_SECRET to Strapi proxy before production.
 ═══════════════════════════════════════════════════════════════ */
-const SP_CLIENT_ID     = '8c7d45a102d74b0ba0e0031c9e2b868e';
-const SP_CLIENT_SECRET = '1233502ba22f46c0b5544a2d302e00b1';
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const SP_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 var SP_TOKEN = null;
 var SP_TOKEN_EXPIRY = 0;
 
