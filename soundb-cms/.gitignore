@@ -84,6 +84,9 @@ public/uploads/*
 !public/uploads/.gitkeep
 .tsbuildinfo
 .eslintcache
+.env
+node_modules
+dist
 
 ############################
 # Node.js
